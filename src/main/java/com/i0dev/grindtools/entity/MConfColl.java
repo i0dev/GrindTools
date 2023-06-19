@@ -1,4 +1,4 @@
-package com.i0dev.globalcurrency.entity;
+package com.i0dev.grindtools.entity;
 
 import com.massivecraft.massivecore.MassiveCore;
 import com.massivecraft.massivecore.store.Coll;

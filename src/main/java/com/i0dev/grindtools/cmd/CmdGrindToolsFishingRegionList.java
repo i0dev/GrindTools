@@ -1,46 +1,44 @@
 package com.i0dev.grindtools.cmd;
 
-import com.i0dev.grindtools.GrindToolsPlugin;
-import com.i0dev.grindtools.cmd.type.TypeFishingRegion;
 import com.i0dev.grindtools.entity.MConf;
-import com.i0dev.grindtools.entity.object.FishingCuboid;
 import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.Visibility;
-import com.massivecraft.massivecore.command.requirement.RequirementIsPlayer;
-import com.massivecraft.massivecore.command.type.primitive.TypeString;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.regions.Region;
 import lombok.SneakyThrows;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
-public class CmdGrindToolsFishingRegionRemove extends GrindToolsCommand {
+import java.awt.*;
 
-    public CmdGrindToolsFishingRegionRemove() {
-        this.addParameter(TypeFishingRegion.get(), "region");
+public class CmdGrindToolsFishingRegionList extends GrindToolsCommand {
+
+    public CmdGrindToolsFishingRegionList() {
         this.setVisibility(Visibility.SECRET);
     }
 
     @SneakyThrows
     @Override
-    public void perform() throws MassiveException {
-        Player player = (Player) sender;
+    public void perform() {
 
-        FishingCuboid cuboid = this.readArg();
+        msg("<green>Fishing regions list:");
+        MConf.get().fishingRegions.forEach(fishingRegion -> {
 
-        if (cuboid == null) {
-            player.sendMessage(Utils.prefixAndColor("%prefix% &cThere is no fishing region with that name."));
-            return;
-        }
+            TextComponent component = new TextComponent(Utils.prefixAndColor("&fname: %region% &f- world: &7%world% &f- loot table: %loottable% &f- coords: (&7%x1%,%y1%,%z1%&f) &f(&7%x2%,%y2%,%z2%7&f)")
+                    .replace("%x1%", String.valueOf(fishingRegion.getCuboid().xMin))
+                    .replace("%y1%", String.valueOf(fishingRegion.getCuboid().yMin))
+                    .replace("%z1%", String.valueOf(fishingRegion.getCuboid().zMin))
+                    .replace("%x2%", String.valueOf(fishingRegion.getCuboid().xMax))
+                    .replace("%y2%", String.valueOf(fishingRegion.getCuboid().yMax))
+                    .replace("%z2%", String.valueOf(fishingRegion.getCuboid().zMax))
+                    .replace("%world%", fishingRegion.getCuboid().world.getName())
+                    .replace("%loottable%", fishingRegion.getLootTable())
+                    .replace("%region%", fishingRegion.getName()));
 
-        for (FishingCuboid fishingRegion : MConf.get().fishingRegions) {
-            if (fishingRegion.getName().equalsIgnoreCase(cuboid.getName())) {
-                MConf.get().fishingRegions.remove(fishingRegion);
-                break;
-            }
-        }
-        MConf.get().changed();
-        player.sendMessage(Utils.prefixAndColor("%prefix% &a%region% fishing region has been removed.").replace("%region%", cuboid.getName()));
+            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{new TextComponent(Utils.prefixAndColor("&7Click to teleport to this fishing region."))}));
+            component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/grindtools fishingregion tp " + fishingRegion.getName()));
+            me.spigot().sendMessage(component);
+        });
     }
 }

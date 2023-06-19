@@ -1,24 +1,31 @@
 package com.i0dev.grindtools.entity.object;
 
-import com.i0dev.grindtools.util.ItemBuilder;
-import org.bukkit.inventory.ItemStack;
+import lombok.Getter;
 
-public enum TechChip {
+@Getter
+public enum TechChips {
 
-    AUTO_SELL,
-    SOULBOUND,
-    TOKEN_BOOST,
-    DROP_BOOST,
-    EXP_BOOST,
-    TREASURE_HUNTER,
-    EXTRACT, // swords and rods
-    LURE, // rods
-    DAMAGE; // swords
+    AUTO_SELL("Auto Sell", 14),
+    SOULBOUND("Soulbound", 15),
+    TREASURE_HUNTER("Treasure Hunter", 16),
+    DROP_BOOST("Drop Boost", 23),
+    TOKEN_BOOST("Token Boost", 24),
+    EXP_BOOST("Exp Boost", 25),
+    EXTRACT("Extract", 32),
+    LURE("Lure", 33),
+    DAMAGE("Damage", 34);
 
 
-    public ItemStack getItemStack(Tools tool) {
+    private final String displayName;
+    private final int upgradeSlot;
 
-        return new ItemBuilder()
+    TechChips(String displayName, int upgradeSlot) {
+        this.displayName = displayName;
+        this.upgradeSlot = upgradeSlot;
+    }
+
+    public String getId() {
+        return this.name().toLowerCase();
     }
 
 }

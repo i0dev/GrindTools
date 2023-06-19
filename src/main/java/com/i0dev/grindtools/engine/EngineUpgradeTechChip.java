@@ -16,11 +16,11 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.stream.IntStream;
 
-public class EngineUpgrade extends Engine {
+public class EngineUpgradeTechChip extends Engine {
 
-    private static final EngineUpgrade i = new EngineUpgrade();
+    private static final EngineUpgradeTechChip i = new EngineUpgradeTechChip();
 
-    public static EngineUpgrade get() {
+    public static EngineUpgradeTechChip get() {
         return i;
     }
 

@@ -1,6 +1,6 @@
-package com.i0dev.grindtools;
+package com.i0dev.grindtools.util;
 
-import com.i0dev.globalcurrency.entity.MLang;
+import com.i0dev.grindtools.entity.MLang;
 import org.bukkit.ChatColor;
 
 import java.util.List;

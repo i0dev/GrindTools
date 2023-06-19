@@ -1,6 +1,6 @@
-package com.i0dev.globalcurrency.entity;
+package com.i0dev.grindtools.entity;
 
-import com.i0dev.globalcurrency.entity.object.*;
+import com.i0dev.grindtools.entity.object.*;
 import com.massivecraft.massivecore.command.editor.annotation.EditorName;
 import com.massivecraft.massivecore.store.Entity;
 import com.massivecraft.massivecore.util.MUtil;
@@ -17,58 +17,73 @@ public class MConf extends Entity<MConf> {
         return i;
     }
 
-    public List<String> aliasesGlobalCurrency = MUtil.list("medals", "globalcurrency");
-    public DatabaseInformation databaseInformation = new DatabaseInformation();
-    public boolean closeBuyWindowOnPurchase = false;
-    public ShopInventory shopInventory = new ShopInventory();
-    public ConfirmationInventory confirmationInventory = new ConfirmationInventory();
-    public BackToCategoriesItem backToCategoriesItem = new BackToCategoriesItem();
+    public List<String> aliasesGrindTools = MUtil.list("grindtools");
 
-    public List<ShopItem> shopItems = MUtil.list(
-            new ShopItem(
-                    "diamond",
-                    "&b&lDiamond",
-                    Material.DIAMOND,
-                    (short) 12,
-                    (short) 1,
-                    1000,
-                    MUtil.list("&7Price: &f1000", "&b1 Diamond"),
-                    true,
-                    MUtil.list("give %player% diamond 1")
-            ),
-            new ShopItem(
-                    "gold_ingot",
-                    "&6&lGold Ingot",
-                    Material.GOLD_INGOT,
-                    (short) 13,
-                    (short) 1,
-                    100,
-                    MUtil.list("&7Price: &f100", "&61 Gold Ingot"),
-                    true,
-                    MUtil.list("give %player% gold_ingot 1")
-            )
+    public List<FishingCuboid> fishingRegions = MUtil.list();
+
+    public List<LootTable> lootTables = MUtil.list(
+            new LootTable("fishing1", MUtil.list(
+                    new AdvancedItemConfig(
+                            Material.AIR,
+                            "money",
+                            MUtil.list(),
+                            false,
+                            20,
+                            1,
+                            3,
+                            false,
+                            MUtil.list("eco give %player% 100")
+                    ),
+                    new AdvancedItemConfig(
+                            Material.DIAMOND,
+                            "&bDiamond",
+                            MUtil.list(),
+                            false,
+                            20,
+                            1,
+                            3,
+                            true,
+                            MUtil.list()
+                    ),
+                    new AdvancedItemConfig(
+                            Material.GOLD_INGOT,
+                            "&6Gold Ingot",
+                            MUtil.list(),
+                            false,
+                            20,
+                            1,
+                            3,
+                            true,
+                            MUtil.list()
+                    )
+            ))
     );
 
-    public List<ShopCategory> shopCategories = MUtil.list(
-            new ShopCategory(
-                    22,
-                    "ores",
-                    "&c&lMedal Shop - Ores",
-                    (short) 27,
-                    (short) 5,
-                    (short) 1,
-                    Material.DIAMOND_ORE,
-                    "&b&lOres",
-                    MUtil.list("&7Valuable ores!"),
-                    true,
-                    MUtil.list("diamond", "gold_ingot")
-            )
+    public HoeConfig hoeConfig = new HoeConfig();
+    public SwordConfig swordConfig = new SwordConfig();
+    public PickaxeConfig pickaxeConfig = new PickaxeConfig();
+    public RodConfig rodConfig = new RodConfig();
 
-    );
+    public TechChipConfig techChipConfig = new TechChipConfig();
+
+    public UpgradeConfig upgradeConfig = new UpgradeConfig();
+
+    public TierUpgradeConfig tierUpgradeConfig = new TierUpgradeConfig();
+
+
+    public LootTable getLootTable(String id) {
+        for (LootTable lootTable : lootTables) {
+            if (lootTable.getId().equalsIgnoreCase(id)) {
+                return lootTable;
+            }
+        }
+        return null;
+    }
 
 
     @Override
     public MConf load(MConf that) {
+        this.fishingRegions = that.fishingRegions;
         super.load(that);
         return this;
     }

@@ -1,4 +1,4 @@
-package com.i0dev.grindtools;
+package com.i0dev.grindtools.util;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

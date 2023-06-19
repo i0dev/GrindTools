@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import java.util.List;
 
 @Getter
-public class HoeConfig {
+public class RodConfig {
 
     int baseCurrency = 3; //  amount of currency per cane broken
 
@@ -20,6 +20,9 @@ public class HoeConfig {
         return null;
     }
 
+    String treasureHunterLootTable = "fishing1";
+    String extractLootTable = "fishing1";
+
 
     List<String> loreFormat = MUtil.list(
             "%description%",
@@ -30,10 +33,11 @@ public class HoeConfig {
 
     List<Tier> tiers = MUtil.list(
             new Tier(
-                    "rookie-hoe",
-                    Material.WOODEN_HOE,
-                    "&6&lRookie Harvester Hoe",
-                    "&7A hoe for the rookie harvester.",
+                    "rookie-rod",
+                    100,
+                    Material.FISHING_ROD,
+                    "&6&lRookie Fishing Rod",
+                    "&7A rod for the rookie fisher.",
                     false,
                     1,
                     1,
@@ -41,10 +45,11 @@ public class HoeConfig {
                     MUtil.list(TechChips.SOULBOUND)
             ),
             new Tier(
-                    "stone-hoe",
-                    Material.STONE_HOE,
-                    "&6&lStone Harvester Hoe",
-                    "&7A slightly better hoe for a semi-experienced harvester.",
+                    "stone-rod",
+                    200,
+                    Material.FISHING_ROD,
+                    "&6&lStone Fishing Rod",
+                    "&7A slightly better rod for a semi-experienced fisher.",
                     true,
                     1.25,
                     1.25,
@@ -52,21 +57,23 @@ public class HoeConfig {
                     MUtil.list()
             ),
             new Tier(
-                    "golden-hoe",
-                    Material.GOLDEN_HOE,
-                    "&6&lGolden Harvester Hoe",
-                    "&7A hoe for the experienced harvester.",
+                    "golden-rod",
+                    300,
+                    Material.FISHING_ROD,
+                    "&6&lGolden Fishing Rod",
+                    "&7A rod for the experienced fisher.",
                     true,
                     1.5,
                     1.5,
                     true,
                     MUtil.list()
-
-            ), new Tier(
-                    "iron-hoe",
-                    Material.IRON_HOE,
-                    "&6&lIron Harvester Hoe",
-                    "&7A hoe for the experienced harvester.",
+            ),
+            new Tier(
+                    "iron-rod",
+                    400,
+                    Material.FISHING_ROD,
+                    "&6&lIron Fishing Rod",
+                    "&7A rod for the master fisher.",
                     true,
                     1.75,
                     1.75,
@@ -74,24 +81,26 @@ public class HoeConfig {
                     MUtil.list()
             ),
             new Tier(
-                    "diamond-hoe",
-                    Material.DIAMOND_HOE,
-                    "&6&lDiamond Harvester Hoe",
-                    "&7A hoe for the experienced harvester.",
+                    "diamond-rod",
+                    500,
+                    Material.FISHING_ROD,
+                    "&6&lDiamond Fishing Rod",
+                    "&7A rod for the master fisher.",
                     true,
-                    2,
-                    2,
+                    1.75,
+                    1.75,
                     true,
                     MUtil.list()
             ),
             new Tier(
-                    "netherite-hoe",
-                    Material.NETHERITE_HOE,
-                    "&6&lNetherite Harvester Hoe",
-                    "&7A hoe for the experienced harvester.",
+                    "netherite-rod",
+                    600,
+                    Material.FISHING_ROD,
+                    "&6&lNetherite Fishing Rod",
+                    "&7A rod for the master fisher.",
                     true,
-                    2.5,
-                    2.5,
+                    1.75,
+                    1.75,
                     true,
                     MUtil.list()
             )

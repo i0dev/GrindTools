@@ -1,10 +1,9 @@
-package com.massivecraft.factions.util;
+package com.i0dev.grindtools.util;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
-//Simple, bare-bones cuboid class. Original idea from bergerkiller on the bukkit forumns (http://forums.bukkit.org/threads/region-general-api-for-creating-cuboids.34644/).
 public class Cuboid {
 	public Cuboid(Location point1, Location point2) {
 		xMin = Math.min(point1.getBlockX(), point2.getBlockX());
@@ -16,7 +15,7 @@ public class Cuboid {
 		world = point1.getWorld();
 	}
 	
-	public Cuboid(int xMin, int xMax, int yMin, int yMax, int zMin,int zMax, World world){
+	public Cuboid(int xMin, int xMax, int yMin, int yMax, int zMin, int zMax, World world){
 		this.xMin = xMin;
 		this.xMax = xMax;
 		this.yMin = yMin;
@@ -66,18 +65,18 @@ public class Cuboid {
 		int xMin, xMax, yMin, yMax, zMin, zMax;
 		String[] sR = s2.split(",");
 		
-		xMin = new Integer(sR[0]);
-		yMin = new Integer(sR[2]);
-		zMin = new Integer(sR[1]);
+		xMin = Integer.parseInt(sR[0]);
+		yMin = Integer.parseInt(sR[2]);
+		zMin = Integer.parseInt(sR[1]);
 		
 		if(s1.contains(":")){
 			String s3 = s1.split(":")[1];
 			
 			String[] sR1 = s3.split(",");
 			
-			xMax = new Integer(sR1[0]);
-			yMax = new Integer(sR1[2]);
-			zMax = new Integer(sR1[1]);
+			xMax = Integer.parseInt(sR1[0]);
+			yMax = Integer.parseInt(sR1[2]);
+			zMax = Integer.parseInt(sR1[1]);
 		} else{
 			xMax = xMin;
 			yMax = yMin;

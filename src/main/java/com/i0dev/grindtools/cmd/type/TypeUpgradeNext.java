@@ -1,36 +1,34 @@
 package com.i0dev.grindtools.cmd.type;
 
 import com.i0dev.grindtools.entity.MConf;
-import com.i0dev.grindtools.entity.object.Tier;
 import com.i0dev.grindtools.entity.object.TierUpgrade;
+import com.i0dev.grindtools.entity.object.TierUpgradeNext;
 import com.massivecraft.massivecore.command.type.TypeAbstractChoice;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
-public class TypeUpgradeAny extends TypeAbstractChoice<String> {
-    private static final TypeUpgradeAny i = new TypeUpgradeAny();
+public class TypeUpgradeNext extends TypeAbstractChoice<TierUpgradeNext> {
+    private static final TypeUpgradeNext i = new TypeUpgradeNext();
 
-    public static TypeUpgradeAny get() {
+    public static TypeUpgradeNext get() {
         return i;
     }
 
-    public TypeUpgradeAny() {
-        super(String.class);
+    public TypeUpgradeNext() {
+        super(TierUpgradeNext.class);
     }
 
     public String getName() {
         return "text";
     }
 
-    public String read(String arg, CommandSender sender) {
-        return arg;
+    public TierUpgradeNext read(String arg, CommandSender sender) {
+        return MConf.get().tierUpgradeConfig.tiersNext.stream().filter(tierUpgrade -> tierUpgrade.getId().equalsIgnoreCase(arg)).findFirst().orElse(null);
     }
 
     public Collection<String> getTabList(CommandSender sender, String arg) {
-        return MConf.get().tierUpgradeConfig.tiers.stream().map(TierUpgrade::getId).collect(Collectors.toList());
+        return MConf.get().tierUpgradeConfig.tiersNext.stream().map(TierUpgradeNext::getId).collect(Collectors.toList());
     }
 }

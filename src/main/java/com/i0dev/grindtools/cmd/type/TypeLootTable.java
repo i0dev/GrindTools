@@ -1,5 +1,7 @@
 package com.i0dev.grindtools.cmd.type;
 
+import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.object.LootTable;
 import com.i0dev.grindtools.entity.object.TechChips;
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.type.TypeAbstractChoice;
@@ -9,30 +11,31 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.stream.Collectors;
 
-public class TypeTechChip extends TypeAbstractChoice<TechChips> {
-    private static final TypeTechChip i = new TypeTechChip();
+public class TypeLootTable extends TypeAbstractChoice<LootTable> {
+    private static final TypeLootTable i = new TypeLootTable();
 
-    public static TypeTechChip get() {
+    public static TypeLootTable get() {
         return i;
     }
 
-    public TypeTechChip() {
-        super(TechChips.class);
+    public TypeLootTable() {
+        super(LootTable.class);
     }
 
     public String getName() {
         return "text";
     }
 
-    public TechChips read(String arg, CommandSender sender) throws MassiveException {
-        try {
-            return EnumSet.allOf(TechChips.class).stream().filter(tools -> tools.name().equalsIgnoreCase(arg)).findFirst().orElse(null);
-        } catch (Exception e) {
-            throw new MassiveException().addMessage("Invalid tool type: " + arg);
+    public LootTable read(String arg, CommandSender sender) throws MassiveException {
+        for (LootTable lootTable : MConf.get().lootTables) {
+            if (lootTable.getId().equalsIgnoreCase(arg)) {
+                return lootTable;
+            }
         }
+        throw new MassiveException().addMsg("<b>Unknown loot table <h>%s<b>.", arg);
     }
 
     public Collection<String> getTabList(CommandSender sender, String arg) {
-        return EnumSet.allOf(TechChips.class).stream().map(Enum::name).collect(Collectors.toList());
+        return MConf.get().lootTables.stream().map(LootTable::getId).collect(Collectors.toList());
     }
 }

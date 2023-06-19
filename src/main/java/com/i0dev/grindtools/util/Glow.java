@@ -1,4 +1,4 @@
-package com.i0dev.grindtools;
+package com.i0dev.grindtools.util;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;

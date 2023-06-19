@@ -1,9 +1,11 @@
 package com.i0dev.grindtools.entity.object;
 
-public enum AppliesTo {
+public enum Tools {
 
     PICKAXE,
-    AXE,
+    SWORD,
     HOE,
     ROD,
+
+
 }

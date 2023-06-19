@@ -1,4 +1,4 @@
-package com.i0dev.grindtools;
+package com.i0dev.grindtools.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -241,8 +241,6 @@ public class ItemBuilder extends ItemStack {
 
     public ItemBuilder addEncs(Map<String, Integer> enchantmentIntegerMap) {
         for (String enchantment : enchantmentIntegerMap.keySet()) {
-            System.out.println(enchantment);
-            System.out.println(Enchantment.getByName(enchantment).getMaxLevel());
             addUnsafeEnchantment(Enchantment.getByName(enchantment), enchantmentIntegerMap.get(enchantment));
         }
 

@@ -8,11 +8,13 @@ import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
-public class TechChip {
+public class TechChipConfigEntry {
 
     Material material;
     String displayName;
@@ -29,33 +31,47 @@ public class TechChip {
                 .lore(itemLore(MConf.get().techChipConfig.itemStackLore))
                 .addGlow(glow);
 
+        GrindToolBuilder.applyTag(item, "techchip-item", UUID.randomUUID().toString());
         GrindToolBuilder.applyTag(item, "techchip-" + id, String.valueOf(level));
 
         return item;
     }
 
-    public ItemStack getUpgradeItemStack(String id, int level, int price) {
+    public ItemStack getUpgradeItemStack(int level, int price) {
+        List<String> lore;
+        Material material = this.material;
+        if (level == 0) {
+            lore = itemLore(MConf.get().techChipConfig.upgradeLevel0Lore);
+            material = MConf.get().techChipConfig.upgradeLevel0Material;
+        } else if (level >= maxLevel) {
+            lore = itemLore(MConf.get().techChipConfig.maxLevelUpgradeLore);
+        } else {
+            lore = upgradeLore(MConf.get().techChipConfig.upgradeItemLore, level, price);
+        }
+
         return new ItemBuilder(material)
                 .amount(level == 0 ? 1 : level)
                 .name(displayName.replace("%level%", String.valueOf(level)))
-                .lore(level == maxLevel ? MConf.get().techChipConfig.maxLevelUpgradeLore : upgradeLore(MConf.get().techChipConfig.upgradeItemLore, level, price))
+                .lore(lore)
                 .addGlow(glow);
     }
 
     public List<String> upgradeLore(List<String> lore, int level, int price) {
-        lore.replaceAll(s -> s
+        List<String> newLore = new ArrayList<>(lore);
+        newLore.replaceAll(s -> s
                 .replace("%price%", String.valueOf(price))
                 .replace("%nextlevel%", String.valueOf(level + 1))
                 .replace("%level%", String.valueOf(level)));
-        return itemLore(lore);
+        return itemLore(newLore);
     }
 
 
     public List<String> itemLore(List<String> lore) {
-        lore.replaceAll(s -> s
+        List<String> newLore = new ArrayList<>(lore);
+        newLore.replaceAll(s -> s
                 .replace("%description%", description)
                 .replace("%appliesTo%", applicableTools.toString()));
-        return lore;
+        return newLore;
     }
 
 

@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import java.util.List;
 
 @Getter
-public class HoeConfig {
+public class PickaxeConfig {
 
     int baseCurrency = 3; //  amount of currency per cane broken
 
@@ -30,10 +30,11 @@ public class HoeConfig {
 
     List<Tier> tiers = MUtil.list(
             new Tier(
-                    "rookie-hoe",
-                    Material.WOODEN_HOE,
-                    "&6&lRookie Harvester Hoe",
-                    "&7A hoe for the rookie harvester.",
+                    "rookie-pickaxe",
+                    100,
+                    Material.WOODEN_PICKAXE,
+                    "&6&lRookie Pickaxe",
+                    "&7A pickaxe for the rookie miner.",
                     false,
                     1,
                     1,
@@ -41,10 +42,11 @@ public class HoeConfig {
                     MUtil.list(TechChips.SOULBOUND)
             ),
             new Tier(
-                    "stone-hoe",
-                    Material.STONE_HOE,
-                    "&6&lStone Harvester Hoe",
-                    "&7A slightly better hoe for a semi-experienced harvester.",
+                    "stone-pickaxe",
+                    200,
+                    Material.STONE_PICKAXE,
+                    "&6&lStone Pickaxe",
+                    "&7A slightly better pickaxe for a semi-experienced miner.",
                     true,
                     1.25,
                     1.25,
@@ -52,21 +54,23 @@ public class HoeConfig {
                     MUtil.list()
             ),
             new Tier(
-                    "golden-hoe",
-                    Material.GOLDEN_HOE,
-                    "&6&lGolden Harvester Hoe",
-                    "&7A hoe for the experienced harvester.",
+                    "golden-pickaxe",
+                    300,
+                    Material.GOLDEN_PICKAXE,
+                    "&6&lGolden Pickaxe",
+                    "&7A pickaxe for the experienced miner.",
                     true,
                     1.5,
                     1.5,
                     true,
                     MUtil.list()
-
-            ), new Tier(
-                    "iron-hoe",
-                    Material.IRON_HOE,
-                    "&6&lIron Harvester Hoe",
-                    "&7A hoe for the experienced harvester.",
+            ),
+            new Tier(
+                    "iron-pickaxe",
+                    400,
+                    Material.IRON_PICKAXE,
+                    "&6&lIron Pickaxe",
+                    "&7A pickaxe for the experienced miner.",
                     true,
                     1.75,
                     1.75,
@@ -74,10 +78,11 @@ public class HoeConfig {
                     MUtil.list()
             ),
             new Tier(
-                    "diamond-hoe",
-                    Material.DIAMOND_HOE,
-                    "&6&lDiamond Harvester Hoe",
-                    "&7A hoe for the experienced harvester.",
+                    "diamond-pickaxe",
+                    500,
+                    Material.DIAMOND_PICKAXE,
+                    "&6&lDiamond Pickaxe",
+                    "&7A pickaxe for the experienced miner.",
                     true,
                     2,
                     2,
@@ -85,13 +90,14 @@ public class HoeConfig {
                     MUtil.list()
             ),
             new Tier(
-                    "netherite-hoe",
-                    Material.NETHERITE_HOE,
-                    "&6&lNetherite Harvester Hoe",
-                    "&7A hoe for the experienced harvester.",
+                    "netherite-pickaxe",
+                    600,
+                    Material.NETHERITE_PICKAXE,
+                    "&6&lNetherite Pickaxe",
+                    "&7A pickaxe for the experienced miner.",
                     true,
-                    2.5,
-                    2.5,
+                    2.25,
+                    2.25,
                     true,
                     MUtil.list()
             )

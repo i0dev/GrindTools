@@ -10,9 +10,10 @@ import lombok.SneakyThrows;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class CmdGrindToolsFishingRegionTp extends GrindToolsCommand {
+public class CmdGrindToolsFishingRegionTeleport extends GrindToolsCommand {
 
-    public CmdGrindToolsFishingRegionTp() {
+    public CmdGrindToolsFishingRegionTeleport() {
+        this.addAliases("tp");
         this.addParameter(TypeFishingRegion.get(), "region");
         this.addParameter(TypePlayer.get(), "player", "you");
         this.setVisibility(Visibility.SECRET);
@@ -29,11 +30,11 @@ public class CmdGrindToolsFishingRegionTp extends GrindToolsCommand {
             return;
         }
 
-        int x1 = cuboid.xMin + ((cuboid.xMax - cuboid.xMin) / 2);
-        int y1 = cuboid.yMin + ((cuboid.yMax - cuboid.yMin) / 2);
-        int z1 = cuboid.zMin + ((cuboid.zMax - cuboid.zMin) / 2);
+        int x1 = cuboid.getCuboid().xMin + ((cuboid.getCuboid().xMax - cuboid.getCuboid().xMin) / 2);
+        int y1 = cuboid.getCuboid().yMin + ((cuboid.getCuboid().yMax - cuboid.getCuboid().yMin) / 2);
+        int z1 = cuboid.getCuboid().zMin + ((cuboid.getCuboid().zMax - cuboid.getCuboid().zMin) / 2);
 
-        Location location = new Location(cuboid.world, x1, y1, z1);
+        Location location = new Location(cuboid.getCuboid().world, x1, y1, z1);
         player.teleport(location);
 
         player.sendMessage(Utils.prefixAndColor("%prefix% &aYou have been teleported to the %region% fishing region.").replace("%region%", cuboid.getName()));
