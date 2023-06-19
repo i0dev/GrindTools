@@ -1,0 +1,40 @@
+name: ${project.name}
+version: ${project.version}
+main: com.i0dev.globalcurrency.GlobalCurrencyPlugin
+website: ${project.url}
+authors: [ i01 ]
+depend: [ MassiveCore ]
+description: ${project.description}
+api-version: 1.15
+permissions:
+  globalcurrency.basecommand: { description: globalcurrency basecommand, default: false }
+  globalcurrency.add: { description: add currency, default: false }
+  globalcurrency.balance: { description: check balance, default: false }
+  globalcurrency.balanceothers: { description: check balance of others, default: false }
+  globalcurrency.remove: { description: remove currency, default: false }
+  globalcurrency.set: { description: set currency, default: false }
+  globalcurrency.shop: { description: open shop, default: false }
+  globalcurrency.version: { description: check version, default: false }
+  globalcurrency.*:
+    globalcurrency.basecommand: true
+    globalcurrency.add: true
+    globalcurrency.balance: true
+    globalcurrency.balanceothers: true
+    globalcurrency.remove: true
+    globalcurrency.set: true
+    globalcurrency.shop: true
+    globalcurrency.version: true
+  globalcurrency.kit.op:
+    default: op
+    children:
+      globalcurrency.*: true
+  globalcurrency.kit.rank0:
+    default: false
+    children:
+      globalcurrency.basecommand: true
+      globalcurrency.balance: true
+      globalcurrency.shop: true
+  globalcurrency.kit.default:
+    default: true
+    children:
+      globalcurrency.kit.rank0: true

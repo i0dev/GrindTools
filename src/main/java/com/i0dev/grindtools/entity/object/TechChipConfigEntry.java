@@ -1,0 +1,62 @@
+package com.i0dev.grindtools.entity.object;
+
+import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.util.GrindToolBuilder;
+import com.i0dev.grindtools.util.ItemBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
+
+@Getter
+@AllArgsConstructor
+public class TechChip {
+
+    Material material;
+    String displayName;
+    String description;
+    boolean glow;
+    List<Tools> applicableTools;
+
+    List<MultiplierLevel> levels;
+    int maxLevel;
+
+    public ItemStack getItemStack(String id, int level) {
+        ItemStack item = new ItemBuilder(material)
+                .name(displayName.replace("%level%", String.valueOf(level)))
+                .lore(itemLore(MConf.get().techChipConfig.itemStackLore))
+                .addGlow(glow);
+
+        GrindToolBuilder.applyTag(item, "techchip-" + id, String.valueOf(level));
+
+        return item;
+    }
+
+    public ItemStack getUpgradeItemStack(String id, int level, int price) {
+        return new ItemBuilder(material)
+                .amount(level == 0 ? 1 : level)
+                .name(displayName.replace("%level%", String.valueOf(level)))
+                .lore(level == maxLevel ? MConf.get().techChipConfig.maxLevelUpgradeLore : upgradeLore(MConf.get().techChipConfig.upgradeItemLore, level, price))
+                .addGlow(glow);
+    }
+
+    public List<String> upgradeLore(List<String> lore, int level, int price) {
+        lore.replaceAll(s -> s
+                .replace("%price%", String.valueOf(price))
+                .replace("%nextlevel%", String.valueOf(level + 1))
+                .replace("%level%", String.valueOf(level)));
+        return itemLore(lore);
+    }
+
+
+    public List<String> itemLore(List<String> lore) {
+        lore.replaceAll(s -> s
+                .replace("%description%", description)
+                .replace("%appliesTo%", applicableTools.toString()));
+        return lore;
+    }
+
+
+}
