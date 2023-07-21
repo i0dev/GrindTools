@@ -1,9 +1,7 @@
 package com.i0dev.grindtools.engine;
 
 import com.i0dev.grindtools.GrindToolsPlugin;
-import com.i0dev.grindtools.entity.MConf;
-import com.i0dev.grindtools.entity.MPlayer;
-import com.i0dev.grindtools.entity.MPlayerColl;
+import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.AdvancedItemConfig;
 import com.i0dev.grindtools.util.GrindToolBuilder;
 import com.i0dev.grindtools.util.RandomCollection;
@@ -38,7 +36,7 @@ public class EngineSword extends Engine {
         if (toolTypeString == null) return;
         if (!toolTypeString.equalsIgnoreCase("SWORD")) return;
 
-        if (!MConf.get().swordConfig.getMobWhitelist().contains(e.getEntityType())) {
+        if (!SwordConfig.get().getMobWhitelist().contains(e.getEntityType())) {
             player.sendMessage("This grind sword will have no effect on this mob!");
         }
     }
@@ -54,7 +52,7 @@ public class EngineSword extends Engine {
         if (toolTypeString == null) return;
         if (!toolTypeString.equalsIgnoreCase("SWORD")) return;
 
-        if (!MConf.get().swordConfig.getMobWhitelist().contains(e.getEntityType())) {
+        if (!SwordConfig.get().getMobWhitelist().contains(e.getEntityType())) {
             player.sendMessage("This grind sword had no effect on this mob!");
             return;
         }
@@ -66,7 +64,7 @@ public class EngineSword extends Engine {
         if (Math.random() < treasureHunterPercent) {
             // do treasure hunter stuff
             player.sendMessage("You found a treasure!");
-            RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(MConf.get().getLootTable(MConf.get().swordConfig.getTreasureHunterLootTable()));
+            RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(LootTableConf.get().getLootTable(SwordConfig.get().getTreasureHunterLootTableFromMob(e.getEntityType())));
             AdvancedItemConfig advancedItemConfig = randomCollection.next();
 
             advancedItemConfig.getCommands().forEach(command -> GrindToolsPlugin.get().getServer().dispatchCommand(GrindToolsPlugin.get().getServer().getConsoleSender(), command.replace("%player%", player.getName())));
@@ -77,7 +75,7 @@ public class EngineSword extends Engine {
 
         if (Math.random() < extractPercent) { // do extract  stuff
             player.sendMessage("you extracted special items!");
-            RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(MConf.get().getLootTable(MConf.get().swordConfig.getTreasureHunterLootTable()));
+            RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(LootTableConf.get().getLootTable(SwordConfig.get().getExtractLootTableFromMob(e.getEntityType())));
             AdvancedItemConfig advancedItemConfig = randomCollection.next();
 
             advancedItemConfig.getCommands().forEach(command -> GrindToolsPlugin.get().getServer().dispatchCommand(GrindToolsPlugin.get().getServer().getConsoleSender(), command.replace("%player%", player.getName())));

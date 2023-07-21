@@ -1,5 +1,9 @@
-package com.i0dev.grindtools.entity.object;
+package com.i0dev.grindtools.entity;
 
+import com.i0dev.grindtools.entity.object.TechChips;
+import com.i0dev.grindtools.entity.object.Tier;
+import com.massivecraft.massivecore.command.editor.annotation.EditorName;
+import com.massivecraft.massivecore.store.Entity;
 import com.massivecraft.massivecore.util.MUtil;
 import lombok.Getter;
 import org.bukkit.Material;
@@ -7,7 +11,15 @@ import org.bukkit.Material;
 import java.util.List;
 
 @Getter
-public class HoeConfig {
+@EditorName("config")
+public class HoeConfig extends Entity<HoeConfig> {
+
+    protected static transient HoeConfig i;
+
+    public static HoeConfig get() {
+        return i;
+    }
+
 
     int baseCurrency = 3; //  amount of currency per cane broken
 
@@ -103,4 +115,12 @@ public class HoeConfig {
                     MUtil.list()
             )
     );
+
+
+    @Override
+    public HoeConfig load(HoeConfig that) {
+        super.load(that);
+        return this;
+    }
+
 }

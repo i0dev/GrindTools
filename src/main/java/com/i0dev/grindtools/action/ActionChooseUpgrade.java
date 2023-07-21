@@ -1,10 +1,7 @@
 package com.i0dev.grindtools.action;
 
-import com.i0dev.grindtools.GrindToolsPlugin;
 import com.i0dev.grindtools.cmd.CmdGrindToolsUpgrade;
-import com.i0dev.grindtools.entity.MConf;
-import com.i0dev.grindtools.entity.MPlayer;
-import com.i0dev.grindtools.entity.object.TechChipConfig;
+import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.TechChipConfigEntry;
 import com.i0dev.grindtools.entity.object.TechChips;
 import com.i0dev.grindtools.entity.object.Tools;
@@ -29,7 +26,7 @@ public class ActionChooseUpgrade implements ChestAction {
     int price;
 
     private TechChipConfigEntry getCnf() {
-        return MConf.get().techChipConfig.getTechChipConfigById(techChip.getId());
+        return TechChipConfig.get().getTechChipConfigById(techChip.getId());
     }
 
     @Override
@@ -66,16 +63,16 @@ public class ActionChooseUpgrade implements ChestAction {
 
         switch (type) {
             case HOE -> {
-                meta.setLore(GrindToolBuilder.formatLore(MConf.get().hoeConfig.getLoreFormat(), tool));
+                meta.setLore(GrindToolBuilder.formatLore(HoeConfig.get().getLoreFormat(), tool));
             }
             case PICKAXE -> {
-                meta.setLore(GrindToolBuilder.formatLore(MConf.get().pickaxeConfig.getLoreFormat(), tool));
+                meta.setLore(GrindToolBuilder.formatLore(PickaxeConfig.get().getLoreFormat(), tool));
             }
             case SWORD -> {
-                meta.setLore(GrindToolBuilder.formatLore(MConf.get().swordConfig.getLoreFormat(), tool));
+                meta.setLore(GrindToolBuilder.formatLore(SwordConfig.get().getLoreFormat(), tool));
             }
             case ROD -> {
-                meta.setLore(GrindToolBuilder.formatLore(MConf.get().rodConfig.getLoreFormat(), tool));
+                meta.setLore(GrindToolBuilder.formatLore(RodConfig.get().getLoreFormat(), tool));
             }
         }
 

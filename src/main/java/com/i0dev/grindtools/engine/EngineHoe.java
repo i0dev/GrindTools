@@ -1,9 +1,7 @@
 package com.i0dev.grindtools.engine;
 
 import com.i0dev.grindtools.GrindToolsPlugin;
-import com.i0dev.grindtools.entity.MConf;
-import com.i0dev.grindtools.entity.MPlayer;
-import com.i0dev.grindtools.entity.MPlayerColl;
+import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.AdvancedItemConfig;
 import com.i0dev.grindtools.util.GrindToolBuilder;
 import com.i0dev.grindtools.util.ItemBuilder;
@@ -78,7 +76,7 @@ public class EngineHoe extends Engine {
         if (Math.random() < treasureHunterPercent) {
             // do treasure hunter stuff
             player.sendMessage("You found a treasure!");
-            RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(MConf.get().getLootTable(MConf.get().hoeConfig.getTreasureHunterLootTable()));
+            RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(LootTableConf.get().getLootTable(HoeConfig.get().getTreasureHunterLootTable()));
             AdvancedItemConfig advancedItemConfig = randomCollection.next();
 
             advancedItemConfig.getCommands().forEach(command -> GrindToolsPlugin.get().getServer().dispatchCommand(GrindToolsPlugin.get().getServer().getConsoleSender(), command.replace("%player%", player.getName())));

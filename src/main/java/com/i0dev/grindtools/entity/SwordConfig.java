@@ -1,5 +1,10 @@
-package com.i0dev.grindtools.entity.object;
+package com.i0dev.grindtools.entity;
 
+import com.i0dev.grindtools.entity.object.MobTypeLootTable;
+import com.i0dev.grindtools.entity.object.TechChips;
+import com.i0dev.grindtools.entity.object.Tier;
+import com.massivecraft.massivecore.command.editor.annotation.EditorName;
+import com.massivecraft.massivecore.store.Entity;
 import com.massivecraft.massivecore.util.MUtil;
 import lombok.Getter;
 import org.bukkit.Material;
@@ -8,7 +13,15 @@ import org.bukkit.entity.EntityType;
 import java.util.List;
 
 @Getter
-public class SwordConfig {
+@EditorName("config")
+public class SwordConfig extends Entity<SwordConfig> {
+
+    protected static transient SwordConfig i;
+
+    public static SwordConfig get() {
+        return i;
+    }
+
 
     int baseCurrency = 3; //  amount of currency per cane broken
 
@@ -27,8 +40,34 @@ public class SwordConfig {
     );
 
 
-    String treasureHunterLootTable = "fishing1";
-    String extractLootTable = "fishing1";
+    List<MobTypeLootTable> treasureHunterEntityLootTableList = MUtil.list(
+            new MobTypeLootTable(EntityType.BLAZE, "fishing1"),
+            new MobTypeLootTable(EntityType.SILVERFISH, "fishing1")
+    );
+
+    List<MobTypeLootTable> extractEntityLootTableList = MUtil.list(
+            new MobTypeLootTable(EntityType.BLAZE, "fishing1"),
+            new MobTypeLootTable(EntityType.SILVERFISH, "fishing1")
+    );
+
+
+    public String getTreasureHunterLootTableFromMob(EntityType entityType) {
+        for (MobTypeLootTable mobTypeLootTable : treasureHunterEntityLootTableList) {
+            if (mobTypeLootTable.getEntity().equals(entityType)) {
+                return mobTypeLootTable.getLootTable();
+            }
+        }
+        return null;
+    }
+
+    public String getExtractLootTableFromMob(EntityType entityType) {
+        for (MobTypeLootTable mobTypeLootTable : extractEntityLootTableList) {
+            if (mobTypeLootTable.getEntity().equals(entityType)) {
+                return mobTypeLootTable.getLootTable();
+            }
+        }
+        return null;
+    }
 
 
     List<String> loreFormat = MUtil.list(
@@ -112,4 +151,11 @@ public class SwordConfig {
                     MUtil.list()
             )
     );
+
+    @Override
+    public SwordConfig load(SwordConfig that) {
+        super.load(that);
+        return this;
+    }
+
 }

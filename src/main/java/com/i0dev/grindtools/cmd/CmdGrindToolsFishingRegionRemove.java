@@ -2,6 +2,7 @@ package com.i0dev.grindtools.cmd;
 
 import com.i0dev.grindtools.GrindToolsPlugin;
 import com.i0dev.grindtools.cmd.type.TypeFishingRegion;
+import com.i0dev.grindtools.entity.LootTableConf;
 import com.i0dev.grindtools.entity.MConf;
 import com.i0dev.grindtools.entity.object.FishingCuboid;
 import com.i0dev.grindtools.util.Utils;
@@ -34,9 +35,9 @@ public class CmdGrindToolsFishingRegionRemove extends GrindToolsCommand {
             return;
         }
 
-        for (FishingCuboid fishingRegion : MConf.get().fishingRegions) {
+        for (FishingCuboid fishingRegion : LootTableConf.get().fishingRegions) {
             if (fishingRegion.getName().equalsIgnoreCase(cuboid.getName())) {
-                MConf.get().fishingRegions.remove(fishingRegion);
+                LootTableConf.get().fishingRegions.remove(fishingRegion);
                 break;
             }
         }

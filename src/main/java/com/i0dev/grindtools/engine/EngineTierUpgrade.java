@@ -1,6 +1,6 @@
 package com.i0dev.grindtools.engine;
 
-import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.*;
 import com.i0dev.grindtools.util.GrindToolBuilder;
 import com.i0dev.grindtools.util.Utils;
@@ -65,7 +65,7 @@ public class EngineTierUpgrade extends Engine {
 
         if (tierUpgradeKeys.contains("tier-upgrade-item-next")) {
             String upgradeString = tierUpgradeKeys.stream().filter(key -> key.startsWith("tier-upgrade-next-") && !key.startsWith("tier-upgrade-item-next")).findFirst().orElse(null);
-            TierUpgradeNext upgrade = MConf.get().tierUpgradeConfig.getNextTierUpgradeById(upgradeString.replace("tier-upgrade-next-", ""));
+            TierUpgradeNext upgrade = UpgradeConfig.get().getNextTierUpgradeById(upgradeString.replace("tier-upgrade-next-", ""));
 
             if (!upgrade.getApplicableTools().contains(toolType)) {
                 player.sendMessage(Utils.color("&cYou can apply this tier upgrade to: &a" + upgrade.getApplicableTools().stream().map(tools -> tools.toString().toLowerCase()).collect(Collectors.joining(", "))));
@@ -82,7 +82,7 @@ public class EngineTierUpgrade extends Engine {
             newTool = GrindToolBuilder.applyTier(tool, nextTier, toolType);
         } else {
             String upgradeString = tierUpgradeKeys.stream().filter(key -> key.startsWith("tier-upgrade-") && !key.startsWith("tier-upgrade-item")).findFirst().orElse(null);
-            TierUpgrade upgrade = MConf.get().tierUpgradeConfig.getTierUpgradeById(upgradeString.replace("tier-upgrade-", ""));
+            TierUpgrade upgrade = UpgradeConfig.get().getTierUpgradeById(upgradeString.replace("tier-upgrade-", ""));
 
             if (!upgrade.getApplicableTools().contains(toolType)) {
                 player.sendMessage(Utils.color("&cYou can apply this tier upgrade to: &a" + upgrade.getApplicableTools().stream().map(tools -> tools.toString().toLowerCase()).collect(Collectors.joining(", "))));
@@ -120,16 +120,16 @@ public class EngineTierUpgrade extends Engine {
 
         switch (toolType) {
             case HOE -> {
-                return MConf.get().hoeConfig.getTiers().stream().filter(tier1 -> tier1.getId().equalsIgnoreCase(tierToUpgradeTo)).findFirst().orElse(null);
+                return HoeConfig.get().getTiers().stream().filter(tier1 -> tier1.getId().equalsIgnoreCase(tierToUpgradeTo)).findFirst().orElse(null);
             }
             case PICKAXE -> {
-                return MConf.get().pickaxeConfig.getTiers().stream().filter(tier1 -> tier1.getId().equalsIgnoreCase(tierToUpgradeTo)).findFirst().orElse(null);
+                return PickaxeConfig.get().getTiers().stream().filter(tier1 -> tier1.getId().equalsIgnoreCase(tierToUpgradeTo)).findFirst().orElse(null);
             }
             case SWORD -> {
-                return MConf.get().swordConfig.getTiers().stream().filter(tier1 -> tier1.getId().equalsIgnoreCase(tierToUpgradeTo)).findFirst().orElse(null);
+                return SwordConfig.get().getTiers().stream().filter(tier1 -> tier1.getId().equalsIgnoreCase(tierToUpgradeTo)).findFirst().orElse(null);
             }
             case ROD -> {
-                return MConf.get().rodConfig.getTiers().stream().filter(tier1 -> tier1.getId().equalsIgnoreCase(tierToUpgradeTo)).findFirst().orElse(null);
+                return RodConfig.get().getTiers().stream().filter(tier1 -> tier1.getId().equalsIgnoreCase(tierToUpgradeTo)).findFirst().orElse(null);
             }
             default -> {
                 return null;
@@ -141,10 +141,10 @@ public class EngineTierUpgrade extends Engine {
         List<Tier> tiers = new ArrayList<>();
 
         switch (tooltype) {
-            case HOE -> tiers = MConf.get().hoeConfig.getTiers();
-            case PICKAXE -> tiers = MConf.get().pickaxeConfig.getTiers();
-            case SWORD -> tiers = MConf.get().swordConfig.getTiers();
-            case ROD -> tiers = MConf.get().rodConfig.getTiers();
+            case HOE -> tiers = HoeConfig.get().getTiers();
+            case PICKAXE -> tiers = PickaxeConfig.get().getTiers();
+            case SWORD -> tiers = SwordConfig.get().getTiers();
+            case ROD -> tiers = RodConfig.get().getTiers();
         }
 
 

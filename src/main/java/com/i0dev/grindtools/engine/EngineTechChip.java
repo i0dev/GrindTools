@@ -1,6 +1,6 @@
 package com.i0dev.grindtools.engine;
 
-import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.TechChipConfigEntry;
 import com.i0dev.grindtools.entity.object.Tools;
 import com.i0dev.grindtools.util.GrindToolBuilder;
@@ -58,7 +58,7 @@ public class EngineTechChip extends Engine {
         String techChip_type = techChipKeys.stream().filter(key -> key.startsWith("techchip-") && !key.startsWith("techchip-item")).findFirst().orElse(null);
         if (techChip_type == null) return;
         techChip_type = techChip_type.replace("techchip-", "");
-        TechChipConfigEntry techChipConfigEntry = MConf.get().techChipConfig.getTechChipConfigById(techChip_type.replace("techchip-", ""));
+        TechChipConfigEntry techChipConfigEntry = TechChipConfig.get().getTechChipConfigById(techChip_type.replace("techchip-", ""));
 
 
         if (!Boolean.parseBoolean(toolPDC.get(GrindToolBuilder.getKey("upgradable"), PersistentDataType.STRING))) {
@@ -83,11 +83,11 @@ public class EngineTechChip extends Engine {
         toolMeta = tool.getItemMeta();
 
         switch (Tools.valueOf(tool_type)) {
-            case HOE -> toolMeta.setLore(GrindToolBuilder.formatLore(MConf.get().hoeConfig.getLoreFormat(), tool));
+            case HOE -> toolMeta.setLore(GrindToolBuilder.formatLore(HoeConfig.get().getLoreFormat(), tool));
             case PICKAXE ->
-                    toolMeta.setLore(GrindToolBuilder.formatLore(MConf.get().pickaxeConfig.getLoreFormat(), tool));
-            case SWORD -> toolMeta.setLore(GrindToolBuilder.formatLore(MConf.get().swordConfig.getLoreFormat(), tool));
-            case ROD -> toolMeta.setLore(GrindToolBuilder.formatLore(MConf.get().rodConfig.getLoreFormat(), tool));
+                    toolMeta.setLore(GrindToolBuilder.formatLore(PickaxeConfig.get().getLoreFormat(), tool));
+            case SWORD -> toolMeta.setLore(GrindToolBuilder.formatLore(SwordConfig.get().getLoreFormat(), tool));
+            case ROD -> toolMeta.setLore(GrindToolBuilder.formatLore(RodConfig.get().getLoreFormat(), tool));
         }
 
         tool.setItemMeta(toolMeta);

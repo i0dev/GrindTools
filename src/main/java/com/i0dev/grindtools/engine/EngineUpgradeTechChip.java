@@ -2,6 +2,8 @@ package com.i0dev.grindtools.engine;
 
 import com.i0dev.grindtools.action.ActionChooseUpgrade;
 import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.TechChipConfig;
+import com.i0dev.grindtools.entity.UpgradeConfig;
 import com.i0dev.grindtools.entity.object.*;
 import com.i0dev.grindtools.util.GrindToolBuilder;
 import com.i0dev.grindtools.util.ItemBuilder;
@@ -33,7 +35,7 @@ public class EngineUpgradeTechChip extends Engine {
         chestGui.setSoundOpen(null);
         chestGui.setSoundClose(null);
 
-        UpgradeConfig cnf = MConf.get().upgradeConfig;
+        UpgradeConfig cnf = UpgradeConfig.get();
 
         IntStream.range(0, chestGui.getInventory().getSize()).forEach(i -> chestGui.getInventory().setItem(i, new ItemBuilder(cnf.borderMaterial)
                 .amount(1)
@@ -46,7 +48,7 @@ public class EngineUpgradeTechChip extends Engine {
     }
 
     public Inventory getUpgradeInventory(ItemStack itemInHand, Tools type) {
-        UpgradeConfig cnf = MConf.get().upgradeConfig;
+        UpgradeConfig cnf = UpgradeConfig.get();
 
         String tite;
         switch (type) {
@@ -61,7 +63,7 @@ public class EngineUpgradeTechChip extends Engine {
 
         chestGui.getInventory().setItem(20, itemInHand);
 
-        TechChipConfig chipConfig = MConf.get().techChipConfig;
+        TechChipConfig chipConfig = TechChipConfig.get();
 
         PersistentDataContainer pdc = itemInHand.getItemMeta().getPersistentDataContainer();
 

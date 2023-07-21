@@ -1,6 +1,6 @@
 package com.i0dev.grindtools.cmd.type;
 
-import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.Tier;
 import com.i0dev.grindtools.entity.object.Tools;
 import com.massivecraft.massivecore.MassiveException;
@@ -35,10 +35,10 @@ public class TypeTier extends TypeAbstractChoice<String> {
 
     public Collection<String> getTabList(CommandSender sender, String arg) {
         List<String> ret = new ArrayList<>();
-        ret.addAll(MConf.get().hoeConfig.getTiers().stream().map(Tier::getId).collect(Collectors.toList()));
-        ret.addAll(MConf.get().pickaxeConfig.getTiers().stream().map(Tier::getId).collect(Collectors.toList()));
-        ret.addAll(MConf.get().rodConfig.getTiers().stream().map(Tier::getId).collect(Collectors.toList()));
-        ret.addAll(MConf.get().swordConfig.getTiers().stream().map(Tier::getId).collect(Collectors.toList()));
+        ret.addAll(HoeConfig.get().getTiers().stream().map(Tier::getId).collect(Collectors.toList()));
+        ret.addAll(PickaxeConfig.get().getTiers().stream().map(Tier::getId).collect(Collectors.toList()));
+        ret.addAll(RodConfig.get().getTiers().stream().map(Tier::getId).collect(Collectors.toList()));
+        ret.addAll(SwordConfig.get().getTiers().stream().map(Tier::getId).collect(Collectors.toList()));
         return ret;
     }
 }

@@ -1,6 +1,7 @@
 package com.i0dev.grindtools.entity.object;
 
 import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.TechChipConfig;
 import com.i0dev.grindtools.util.GrindToolBuilder;
 import com.i0dev.grindtools.util.ItemBuilder;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class TechChipConfigEntry {
     public ItemStack getItemStack(String id, int level) {
         ItemStack item = new ItemBuilder(material)
                 .name(displayName.replace("%level%", String.valueOf(level)))
-                .lore(itemLore(MConf.get().techChipConfig.itemStackLore))
+                .lore(itemLore(TechChipConfig.get().getItemStackLore()))
                 .addGlow(glow);
 
         GrindToolBuilder.applyTag(item, "techchip-item", UUID.randomUUID().toString());
@@ -41,12 +42,12 @@ public class TechChipConfigEntry {
         List<String> lore;
         Material material = this.material;
         if (level == 0) {
-            lore = itemLore(MConf.get().techChipConfig.upgradeLevel0Lore);
-            material = MConf.get().techChipConfig.upgradeLevel0Material;
+            lore = itemLore(TechChipConfig.get().getUpgradeLevel0Lore());
+            material = TechChipConfig.get().getUpgradeLevel0Material();
         } else if (level >= maxLevel) {
-            lore = itemLore(MConf.get().techChipConfig.maxLevelUpgradeLore);
+            lore = itemLore(TechChipConfig.get().getMaxLevelUpgradeLore());
         } else {
-            lore = upgradeLore(MConf.get().techChipConfig.upgradeItemLore, level, price);
+            lore = upgradeLore(TechChipConfig.get().getUpgradeItemLore(), level, price);
         }
 
         return new ItemBuilder(material)

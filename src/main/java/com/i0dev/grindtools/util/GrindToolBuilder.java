@@ -1,7 +1,7 @@
 package com.i0dev.grindtools.util;
 
 import com.i0dev.grindtools.GrindToolsPlugin;
-import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.*;
 import net.brcdev.shopgui.ShopGuiPlugin;
 import net.brcdev.shopgui.ShopGuiPlusApi;
@@ -14,6 +14,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GrindToolBuilder {
 
@@ -42,27 +43,27 @@ public class GrindToolBuilder {
 
         switch (type) {
             case HOE -> {
-                applyTag(item, "baseCurrency", String.valueOf(MConf.get().hoeConfig.getBaseCurrency()));
+                applyTag(item, "baseCurrency", String.valueOf(HoeConfig.get().getBaseCurrency()));
                 ItemMeta meta = item.getItemMeta();
-                meta.setLore(formatLore(MConf.get().hoeConfig.getLoreFormat(), item));
+                meta.setLore(formatLore(HoeConfig.get().getLoreFormat(), item));
                 item.setItemMeta(meta);
             }
             case PICKAXE -> {
-                applyTag(item, "baseCurrency", String.valueOf(MConf.get().pickaxeConfig.getBaseCurrency()));
+                applyTag(item, "baseCurrency", String.valueOf(PickaxeConfig.get().getBaseCurrency()));
                 ItemMeta meta = item.getItemMeta();
-                meta.setLore(formatLore(MConf.get().pickaxeConfig.getLoreFormat(), item));
+                meta.setLore(formatLore(PickaxeConfig.get().getLoreFormat(), item));
                 item.setItemMeta(meta);
             }
             case ROD -> {
-                applyTag(item, "baseCurrency", String.valueOf(MConf.get().rodConfig.getBaseCurrency()));
+                applyTag(item, "baseCurrency", String.valueOf(RodConfig.get().getBaseCurrency()));
                 ItemMeta meta = item.getItemMeta();
-                meta.setLore(formatLore(MConf.get().rodConfig.getLoreFormat(), item));
+                meta.setLore(formatLore(RodConfig.get().getLoreFormat(), item));
                 item.setItemMeta(meta);
             }
             case SWORD -> {
-                applyTag(item, "baseCurrency", String.valueOf(MConf.get().swordConfig.getBaseCurrency()));
+                applyTag(item, "baseCurrency", String.valueOf(SwordConfig.get().getBaseCurrency()));
                 ItemMeta meta = item.getItemMeta();
-                meta.setLore(formatLore(MConf.get().swordConfig.getLoreFormat(), item));
+                meta.setLore(formatLore(SwordConfig.get().getLoreFormat(), item));
                 item.setItemMeta(meta);
             }
         }
@@ -80,27 +81,29 @@ public class GrindToolBuilder {
 
         switch (type) {
             case HOE ->
-                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", MConf.get().hoeConfig.getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
+                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", HoeConfig.get().getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
             case PICKAXE ->
-                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", MConf.get().pickaxeConfig.getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
+                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", PickaxeConfig.get().getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
             case ROD ->
-                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", MConf.get().rodConfig.getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
+                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", RodConfig.get().getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
             case SWORD ->
-                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", MConf.get().swordConfig.getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
+                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", SwordConfig.get().getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
         }
 
 
         String chipFormat = "&7- &a%chip% &7(Level %level%)";
 
-        TechChipConfig cnf = MConf.get().techChipConfig;
+        TechChipConfig cnf = TechChipConfig.get();
 
-        double tokenBoost = getCurrencyModifier(item);
-        double expBoost = getExpModifier(item);
-        double dropBoost = getDropModifier(item);
-        double treasureHunter = getTreasureHunterPercent(item);
-        double extract = getExtractPercent(item);
-        double averageLure = (double) (getLureMin(item) + getLureMax(item)) / 2;
-        double damage = getDamageModifier(item);
+        int baseCurrency = Integer.parseInt(getPDC(item).get(getKey("baseCurrency"), PersistentDataType.STRING));
+
+        double tokenBoost = Math.round((getCurrencyModifier(item) - baseCurrency) * 100.0) / 100.0;
+        double expBoost = Math.round(getExpModifier(item) * 100.0) / 100.0;
+        double dropBoost = Math.round(getDropModifier(item) * 100.0) / 100.0;
+        double treasureHunter = Math.round(getTreasureHunterPercent(item) * 10000.0) / 10000.0;
+        double extract = Math.round(getExtractPercent(item) * 1000.0) / 1000.0;
+        double averageLure = Math.round(((double) (getLureMin(item) + getLureMax(item)) / 2 / 20) * 10.0) / 10.0;
+        double damage = Math.round(getDamageModifier(item) * 10.0) / 10.0;
 
         List<String> techChipsToAdd = new ArrayList<>();
         List<String> modifiersToAdd = new ArrayList<>();
@@ -175,7 +178,7 @@ public class GrindToolBuilder {
             String name = namespacedKey.getKey().replace("techchip-", "");
             TechChips techChip = TechChips.valueOf(name.toUpperCase());
             int levelInt = Integer.parseInt(pdc.get(namespacedKey, PersistentDataType.STRING));
-            MultiplierLevel level = MConf.get().techChipConfig.getTechChipConfigById(techChip.getId()).getLevels().stream().filter(lvl -> lvl.getLevel() == levelInt).findFirst().orElseGet(null);
+            MultiplierLevel level = TechChipConfig.get().getTechChipConfigById(techChip.getId()).getLevels().stream().filter(lvl -> lvl.getLevel() == levelInt).findFirst().orElseGet(null);
             ret.put(techChip, level);
         });
         return ret;
@@ -222,16 +225,21 @@ public class GrindToolBuilder {
     }
 
     public static double getDropModifier(ItemStack tool) {
-        TechChipConfig cnf = MConf.get().techChipConfig;
+        TechChipConfig cnf = TechChipConfig.get();
 
         double dropRatesMultiplier = Double.parseDouble(getPDC(tool).get(getKey("modifier-dropRatesMultiplier"), PersistentDataType.STRING));
         int dropBoostLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-drop_boost"), PersistentDataType.STRING, "0"));
+
+        // get the 0.XX of the dropRatesMultiplier
+        double dropRatesMultiplierDecimal = dropRatesMultiplier - Math.floor(dropRatesMultiplier);
+        double percentChanceToRoundUp = dropRatesMultiplierDecimal * 100;
+        dropRatesMultiplier = Math.floor(dropRatesMultiplier) + (ThreadLocalRandom.current().nextInt(100) < percentChanceToRoundUp ? 1 : 0);
 
         return getEverythingMultiplier(tool) * (dropRatesMultiplier * dropBoostLevel == 0 ? 1 : cnf.drop_boost.getLevels().stream().filter(lvl -> lvl.getLevel() == dropBoostLevel).findFirst().orElseThrow().getMultiplier());
     }
 
     public static double getCurrencyModifier(ItemStack tool) {
-        TechChipConfig cnf = MConf.get().techChipConfig;
+        TechChipConfig cnf = TechChipConfig.get();
         int baseCurrency = Integer.parseInt(getPDC(tool).get(getKey("baseCurrency"), PersistentDataType.STRING));
 
         int tokenBoostLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-token_boost"), PersistentDataType.STRING, "0"));
@@ -239,35 +247,35 @@ public class GrindToolBuilder {
     }
 
     public static double getExpModifier(ItemStack tool) {
-        TechChipConfig cnf = MConf.get().techChipConfig;
+        TechChipConfig cnf = TechChipConfig.get();
 
         int expBoostLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-exp_boost"), PersistentDataType.STRING, "0"));
         return getEverythingMultiplier(tool) * (expBoostLevel == 0 ? 1 : cnf.exp_boost.getLevels().stream().filter(lvl -> lvl.getLevel() == expBoostLevel).findFirst().orElseThrow().getMultiplier());
     }
 
     public static double getTreasureHunterPercent(ItemStack tool) {
-        TechChipConfig cnf = MConf.get().techChipConfig;
+        TechChipConfig cnf = TechChipConfig.get();
 
         int treasureHunterLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-treasure_hunter"), PersistentDataType.STRING, "0"));
         return getEverythingMultiplier(tool) * (treasureHunterLevel == 0 ? 0 : cnf.treasure_hunter.getLevels().stream().filter(lvl -> lvl.getLevel() == treasureHunterLevel).findFirst().orElseThrow().getMultiplier());
     }
 
     public static double getExtractPercent(ItemStack tool) {
-        TechChipConfig cnf = MConf.get().techChipConfig;
+        TechChipConfig cnf = TechChipConfig.get();
 
         int extractLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-extract"), PersistentDataType.STRING, "0"));
         return getEverythingMultiplier(tool) * (extractLevel == 0 ? 0 : cnf.extract.getLevels().stream().filter(lvl -> lvl.getLevel() == extractLevel).findFirst().orElseThrow().getMultiplier());
     }
 
     public static int getLureMin(ItemStack tool) {
-        TechChipConfig cnf = MConf.get().techChipConfig;
+        TechChipConfig cnf = TechChipConfig.get();
 
         int lureLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-lure"), PersistentDataType.STRING, "0"));
         return (lureLevel == 0 ? 100 : (cnf.lure.getLevels().stream().filter(lvl -> lvl.getLevel() == lureLevel).findFirst().orElseThrow()).getMin());
     }
 
     public static int getLureMax(ItemStack tool) {
-        TechChipConfig cnf = MConf.get().techChipConfig;
+        TechChipConfig cnf = TechChipConfig.get();
 
         int lureLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-lure"), PersistentDataType.STRING, "0"));
         return (lureLevel == 0 ? 600 : (cnf.lure.getLevels().stream().filter(lvl -> lvl.getLevel() == lureLevel).findFirst().orElseThrow()).getMax());
@@ -275,7 +283,7 @@ public class GrindToolBuilder {
 
 
     public static double getDamageModifier(ItemStack tool) {
-        TechChipConfig cnf = MConf.get().techChipConfig;
+        TechChipConfig cnf = TechChipConfig.get();
 
         int damageLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-damage"), PersistentDataType.STRING, "0"));
         return getEverythingMultiplier(tool) * (damageLevel == 0 ? 1 : cnf.damage.getLevels().stream().filter(lvl -> lvl.getLevel() == damageLevel).findFirst().orElseThrow().getMultiplier());

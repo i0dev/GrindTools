@@ -2,8 +2,8 @@ package com.i0dev.grindtools.cmd;
 
 import com.i0dev.grindtools.cmd.type.TypeTechChip;
 import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.TechChipConfig;
 import com.i0dev.grindtools.entity.object.TechChipConfigEntry;
-import com.i0dev.grindtools.entity.object.TechChipConfig;
 import com.i0dev.grindtools.entity.object.TechChips;
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.Visibility;
@@ -30,7 +30,7 @@ public class CmdGrindToolsGiveTechChip extends GrindToolsCommand {
         int level = this.readArgAt(2);
         int amount = this.readArgAt(3, 1);
 
-        TechChipConfig cnf = MConf.get().techChipConfig;
+        TechChipConfig cnf = TechChipConfig.get();
         TechChipConfigEntry techChipConfigEntry = cnf.getTechChipConfigById(chip.name());
 
         if (techChipConfigEntry == null) {

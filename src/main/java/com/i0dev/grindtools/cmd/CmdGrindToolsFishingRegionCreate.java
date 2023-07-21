@@ -2,6 +2,7 @@ package com.i0dev.grindtools.cmd;
 
 import com.i0dev.grindtools.GrindToolsPlugin;
 import com.i0dev.grindtools.cmd.type.TypeLootTable;
+import com.i0dev.grindtools.entity.LootTableConf;
 import com.i0dev.grindtools.entity.MConf;
 import com.i0dev.grindtools.entity.object.FishingCuboid;
 import com.i0dev.grindtools.entity.object.LootTable;
@@ -33,7 +34,7 @@ public class CmdGrindToolsFishingRegionCreate extends GrindToolsCommand {
         String name = this.readArg();
         LootTable lootTable = this.readArg();
 
-        boolean alreadyExists = MConf.get().fishingRegions
+        boolean alreadyExists = LootTableConf.get().fishingRegions
                 .stream()
                 .anyMatch(fishingCuboid -> fishingCuboid.getName().equalsIgnoreCase(name));
 
@@ -56,7 +57,7 @@ public class CmdGrindToolsFishingRegionCreate extends GrindToolsCommand {
             return;
         }
 
-        MConf.get().fishingRegions.add(new FishingCuboid(selection.getMinimumPoint(), selection.getMaximumPoint(), Bukkit.getWorld(selection.getWorld().getName()), name, lootTable.getId()));
+        LootTableConf.get().fishingRegions.add(new FishingCuboid(selection.getMinimumPoint(), selection.getMaximumPoint(), Bukkit.getWorld(selection.getWorld().getName()), name, lootTable.getId()));
         MConf.get().changed();
         player.sendMessage(Utils.prefixAndColor("%prefix% &aThat fishing region has been created."));
     }

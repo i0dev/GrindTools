@@ -1,11 +1,6 @@
 package com.i0dev.grindtools.cmd;
 
-import com.i0dev.grindtools.cmd.type.TypeTechChip;
 import com.i0dev.grindtools.cmd.type.TypeUpgradeAny;
-import com.i0dev.grindtools.entity.MConf;
-import com.i0dev.grindtools.entity.object.TechChipConfig;
-import com.i0dev.grindtools.entity.object.TechChipConfigEntry;
-import com.i0dev.grindtools.entity.object.TechChips;
 import com.i0dev.grindtools.entity.object.TierUpgrade;
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.Visibility;

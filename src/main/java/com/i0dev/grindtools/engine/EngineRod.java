@@ -1,9 +1,7 @@
 package com.i0dev.grindtools.engine;
 
 import com.i0dev.grindtools.GrindToolsPlugin;
-import com.i0dev.grindtools.entity.MConf;
-import com.i0dev.grindtools.entity.MPlayer;
-import com.i0dev.grindtools.entity.MPlayerColl;
+import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.AdvancedItemConfig;
 import com.i0dev.grindtools.entity.object.FishingCuboid;
 import com.i0dev.grindtools.entity.object.LootTable;
@@ -47,7 +45,7 @@ public class EngineRod extends Engine {
 
         // -- specific handling -- //
 
-        FishingCuboid region = MConf.get().fishingRegions.stream().filter(fishingCuboid -> fishingCuboid.getCuboid().contains(e.getHook().getLocation())).findFirst().orElse(null);
+        FishingCuboid region = LootTableConf.get().fishingRegions.stream().filter(fishingCuboid -> fishingCuboid.getCuboid().contains(e.getHook().getLocation())).findFirst().orElse(null);
 
         if (region == null) {
             e.setCancelled(true);
@@ -55,7 +53,7 @@ public class EngineRod extends Engine {
             return;
         }
 
-        LootTable lootTable = MConf.get().getLootTable(region.getLootTable());
+        LootTable lootTable = LootTableConf.get().getLootTable(region.getLootTable());
 
         if (e.getState().equals(PlayerFishEvent.State.CAUGHT_FISH)) {
             handleCatchingFish(e, tool, lootTable);
@@ -75,7 +73,7 @@ public class EngineRod extends Engine {
         if (Math.random() < treasureHunterPercent) {
             // do treasure hunter stuff
             player.sendMessage("You found a treasure!");
-            RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(MConf.get().getLootTable(MConf.get().rodConfig.getTreasureHunterLootTable()));
+            RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(LootTableConf.get().getLootTable(RodConfig.get().getTreasureHunterLootTable()));
             AdvancedItemConfig advancedItemConfig = randomCollection.next();
 
             advancedItemConfig.getCommands().forEach(command -> GrindToolsPlugin.get().getServer().dispatchCommand(GrindToolsPlugin.get().getServer().getConsoleSender(), command.replace("%player%", player.getName())));
@@ -86,7 +84,7 @@ public class EngineRod extends Engine {
 
         if (Math.random() < extractPercent) { // do extract  stuff
             player.sendMessage("you extracted special items!");
-            RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(MConf.get().getLootTable(MConf.get().rodConfig.getTreasureHunterLootTable()));
+            RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(LootTableConf.get().getLootTable(RodConfig.get().getExtractLootTable()));
             AdvancedItemConfig advancedItemConfig = randomCollection.next();
 
             advancedItemConfig.getCommands().forEach(command -> GrindToolsPlugin.get().getServer().dispatchCommand(GrindToolsPlugin.get().getServer().getConsoleSender(), command.replace("%player%", player.getName())));

@@ -1,5 +1,8 @@
-package com.i0dev.grindtools.entity.object;
+package com.i0dev.grindtools.entity;
 
+import com.i0dev.grindtools.entity.object.*;
+import com.massivecraft.massivecore.command.editor.annotation.EditorName;
+import com.massivecraft.massivecore.store.Entity;
 import com.massivecraft.massivecore.util.MUtil;
 import lombok.Getter;
 import org.bukkit.Material;
@@ -7,7 +10,15 @@ import org.bukkit.Material;
 import java.util.List;
 
 @Getter
-public class RodConfig {
+@EditorName("config")
+public class RodConfig extends Entity<RodConfig> {
+
+    protected static transient RodConfig i;
+
+    public static RodConfig get() {
+        return i;
+    }
+
 
     int baseCurrency = 3; //  amount of currency per cane broken
 
@@ -105,4 +116,11 @@ public class RodConfig {
                     MUtil.list()
             )
     );
+
+    @Override
+    public RodConfig load(RodConfig that) {
+        super.load(that);
+        return this;
+    }
+
 }

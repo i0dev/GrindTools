@@ -1,8 +1,6 @@
 package com.i0dev.grindtools;
 
-import com.i0dev.grindtools.entity.MConfColl;
-import com.i0dev.grindtools.entity.MLangColl;
-import com.i0dev.grindtools.entity.MPlayerColl;
+import com.i0dev.grindtools.entity.*;
 import com.massivecraft.massivecore.MassivePlugin;
 import com.massivecraft.massivecore.collections.MassiveList;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -34,7 +32,15 @@ public class GrindToolsPlugin extends MassivePlugin {
         return new MassiveList<>(
                 MConfColl.class,
                 MLangColl.class,
-                MPlayerColl.class
+                MPlayerColl.class,
+
+                HoeConfigColl.class,
+                LootTableConfColl.class,
+                PickaxeConfigColl.class,
+                RodConfigColl.class,
+                SwordConfigColl.class,
+                TechChipConfigColl.class,
+                UpgradeConfigColl.class
         );
     }
 

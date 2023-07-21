@@ -1,6 +1,7 @@
 package com.i0dev.grindtools.cmd.type;
 
 import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.UpgradeConfig;
 import com.i0dev.grindtools.entity.object.Tier;
 import com.i0dev.grindtools.entity.object.TierUpgrade;
 import com.massivecraft.massivecore.command.type.TypeAbstractChoice;
@@ -27,10 +28,10 @@ public class TypeUpgradeAny extends TypeAbstractChoice<TierUpgrade> {
     }
 
     public TierUpgrade read(String arg, CommandSender sender) {
-        return MConf.get().tierUpgradeConfig.tiers.stream().filter(tierUpgrade -> tierUpgrade.getId().equalsIgnoreCase(arg)).findFirst().orElse(null);
+        return UpgradeConfig.get().tiers.stream().filter(tierUpgrade -> tierUpgrade.getId().equalsIgnoreCase(arg)).findFirst().orElse(null);
     }
 
     public Collection<String> getTabList(CommandSender sender, String arg) {
-        return MConf.get().tierUpgradeConfig.tiers.stream().map(TierUpgrade::getId).collect(Collectors.toList());
+        return UpgradeConfig.get().tiers.stream().map(TierUpgrade::getId).collect(Collectors.toList());
     }
 }

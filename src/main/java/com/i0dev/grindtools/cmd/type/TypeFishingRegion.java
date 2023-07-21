@@ -1,5 +1,6 @@
 package com.i0dev.grindtools.cmd.type;
 
+import com.i0dev.grindtools.entity.LootTableConf;
 import com.i0dev.grindtools.entity.MConf;
 import com.i0dev.grindtools.entity.object.FishingCuboid;
 import com.i0dev.grindtools.entity.object.Tools;
@@ -28,10 +29,10 @@ public class TypeFishingRegion extends TypeAbstractChoice<FishingCuboid> {
     }
 
     public FishingCuboid read(String arg, CommandSender sender) throws MassiveException {
-        return MConf.get().fishingRegions.stream().filter(fishingCuboid -> fishingCuboid.getName().equalsIgnoreCase(arg)).findFirst().orElseThrow(() -> new MassiveException().addMessage("Fishing region not found"));
+        return LootTableConf.get().fishingRegions.stream().filter(fishingCuboid -> fishingCuboid.getName().equalsIgnoreCase(arg)).findFirst().orElseThrow(() -> new MassiveException().addMessage("Fishing region not found"));
     }
 
     public Collection<String> getTabList(CommandSender sender, String arg) {
-        return MConf.get().fishingRegions.stream().map(FishingCuboid::getName).collect(Collectors.toList());
+        return LootTableConf.get().fishingRegions.stream().map(FishingCuboid::getName).collect(Collectors.toList());
     }
 }

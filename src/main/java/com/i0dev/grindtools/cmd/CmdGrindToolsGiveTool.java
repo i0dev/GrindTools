@@ -2,7 +2,7 @@ package com.i0dev.grindtools.cmd;
 
 import com.i0dev.grindtools.cmd.type.TypeTier;
 import com.i0dev.grindtools.cmd.type.TypeTool;
-import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.Tier;
 import com.i0dev.grindtools.entity.object.Tools;
 import com.i0dev.grindtools.util.GrindToolBuilder;
@@ -45,28 +45,28 @@ public class CmdGrindToolsGiveTool extends GrindToolsCommand {
     public Tier getTier(Tools tool, String tierName) {
         switch (tool) {
             case HOE -> {
-                for (Tier tier : MConf.get().hoeConfig.getTiers()) {
+                for (Tier tier : HoeConfig.get().getTiers()) {
                     if (tier.getId().equalsIgnoreCase(tierName)) {
                         return tier;
                     }
                 }
             }
             case ROD -> {
-                for (Tier tier : MConf.get().rodConfig.getTiers()) {
+                for (Tier tier : RodConfig.get().getTiers()) {
                     if (tier.getId().equalsIgnoreCase(tierName)) {
                         return tier;
                     }
                 }
             }
             case PICKAXE -> {
-                for (Tier tier : MConf.get().pickaxeConfig.getTiers()) {
+                for (Tier tier : PickaxeConfig.get().getTiers()) {
                     if (tier.getId().equalsIgnoreCase(tierName)) {
                         return tier;
                     }
                 }
             }
             case SWORD -> {
-                for (Tier tier : MConf.get().swordConfig.getTiers()) {
+                for (Tier tier : SwordConfig.get().getTiers()) {
                     if (tier.getId().equalsIgnoreCase(tierName)) {
                         return tier;
                     }

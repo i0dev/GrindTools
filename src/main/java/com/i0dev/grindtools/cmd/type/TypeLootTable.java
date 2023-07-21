@@ -1,5 +1,6 @@
 package com.i0dev.grindtools.cmd.type;
 
+import com.i0dev.grindtools.entity.LootTableConf;
 import com.i0dev.grindtools.entity.MConf;
 import com.i0dev.grindtools.entity.object.LootTable;
 import com.i0dev.grindtools.entity.object.TechChips;
@@ -27,7 +28,7 @@ public class TypeLootTable extends TypeAbstractChoice<LootTable> {
     }
 
     public LootTable read(String arg, CommandSender sender) throws MassiveException {
-        for (LootTable lootTable : MConf.get().lootTables) {
+        for (LootTable lootTable : LootTableConf.get().tables) {
             if (lootTable.getId().equalsIgnoreCase(arg)) {
                 return lootTable;
             }
@@ -36,6 +37,6 @@ public class TypeLootTable extends TypeAbstractChoice<LootTable> {
     }
 
     public Collection<String> getTabList(CommandSender sender, String arg) {
-        return MConf.get().lootTables.stream().map(LootTable::getId).collect(Collectors.toList());
+        return LootTableConf.get().tables.stream().map(LootTable::getId).collect(Collectors.toList());
     }
 }

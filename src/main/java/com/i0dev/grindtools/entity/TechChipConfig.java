@@ -1,5 +1,10 @@
-package com.i0dev.grindtools.entity.object;
+package com.i0dev.grindtools.entity;
 
+import com.i0dev.grindtools.entity.object.MultiplierLevel;
+import com.i0dev.grindtools.entity.object.TechChipConfigEntry;
+import com.i0dev.grindtools.entity.object.Tools;
+import com.massivecraft.massivecore.command.editor.annotation.EditorName;
+import com.massivecraft.massivecore.store.Entity;
 import com.massivecraft.massivecore.util.MUtil;
 import lombok.Getter;
 import org.bukkit.Material;
@@ -8,7 +13,15 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public class TechChipConfig {
+@EditorName("config")
+public class TechChipConfig extends Entity<TechChipConfig> {
+
+    protected static transient TechChipConfig i;
+
+    public static TechChipConfig get() {
+        return i;
+    }
+
 
     public TechChipConfigEntry getTechChipConfigById(String id) {
         switch (id.toUpperCase()) {
@@ -212,4 +225,11 @@ public class TechChipConfig {
             ),
             5
     );
+
+    @Override
+    public TechChipConfig load(TechChipConfig that) {
+        super.load(that);
+        return this;
+    }
+
 }

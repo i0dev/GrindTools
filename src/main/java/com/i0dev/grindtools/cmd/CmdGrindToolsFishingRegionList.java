@@ -1,5 +1,6 @@
 package com.i0dev.grindtools.cmd;
 
+import com.i0dev.grindtools.entity.LootTableConf;
 import com.i0dev.grindtools.entity.MConf;
 import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.MassiveException;
@@ -23,7 +24,7 @@ public class CmdGrindToolsFishingRegionList extends GrindToolsCommand {
     public void perform() {
 
         msg("<green>Fishing regions list:");
-        MConf.get().fishingRegions.forEach(fishingRegion -> {
+        LootTableConf.get().fishingRegions.forEach(fishingRegion -> {
 
             TextComponent component = new TextComponent(Utils.prefixAndColor("&fname: %region% &f- world: &7%world% &f- loot table: %loottable% &f- coords: (&7%x1%,%y1%,%z1%&f) &f(&7%x2%,%y2%,%z2%7&f)")
                     .replace("%x1%", String.valueOf(fishingRegion.getCuboid().xMin))
