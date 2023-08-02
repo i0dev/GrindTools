@@ -10,6 +10,16 @@ public enum Perm implements Identified {
 
     DEBUG,
 
+    SET,
+    ADD,
+    PAY,
+    REMOVE,
+    BALANCE,
+    BALANCE_OTHERS,
+
+    REPLACE_ORE,
+    CLEAR_ORE,
+
     FISHING_REGION,
     FISHING_REGION_CREATE,
     FISHING_REGION_REMOVE,

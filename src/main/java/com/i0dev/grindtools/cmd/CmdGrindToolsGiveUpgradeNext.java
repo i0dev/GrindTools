@@ -4,7 +4,10 @@ import com.i0dev.grindtools.cmd.type.TypeTechChip;
 import com.i0dev.grindtools.cmd.type.TypeUpgradeAny;
 import com.i0dev.grindtools.cmd.type.TypeUpgradeNext;
 import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.MLang;
 import com.i0dev.grindtools.entity.object.*;
+import com.i0dev.grindtools.util.Pair;
+import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.Visibility;
 import com.massivecraft.massivecore.command.type.primitive.TypeInteger;
@@ -29,7 +32,7 @@ public class CmdGrindToolsGiveUpgradeNext extends GrindToolsCommand {
         int amount = this.readArgAt(2, 1);
 
         if (upgrade == null) {
-            msg("Upgrade not found.");
+            Utils.msg(sender, MLang.get().upgradeDoesntExist);
             return;
         }
 
@@ -38,6 +41,10 @@ public class CmdGrindToolsGiveUpgradeNext extends GrindToolsCommand {
             player.getInventory().addItem(item);
         }
 
-        msg("Gave " + player.getName() + " " + amount + " " + upgrade.getId() + " upgrade(s).");
+        Utils.msg(sender, MLang.get().gaveUpgrade,
+                new Pair<>("%upgrade%", upgrade.getId()),
+                new Pair<>("%amount%", String.valueOf(amount)),
+                new Pair<>("%player%", player.getName())
+        );
     }
 }

@@ -20,7 +20,7 @@ public class RodConfig extends Entity<RodConfig> {
     }
 
 
-    int baseCurrency = 3; //  amount of currency per cane broken
+    int baseCurrency = 3; // default drops
 
     public Tier getFromId(String id) {
         for (Tier tier : tiers) {

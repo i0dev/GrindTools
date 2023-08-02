@@ -4,8 +4,10 @@ import com.i0dev.grindtools.GrindToolsPlugin;
 import com.i0dev.grindtools.cmd.type.TypeLootTable;
 import com.i0dev.grindtools.entity.LootTableConf;
 import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.MLang;
 import com.i0dev.grindtools.entity.object.FishingCuboid;
 import com.i0dev.grindtools.entity.object.LootTable;
+import com.i0dev.grindtools.util.Pair;
 import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.Visibility;
@@ -29,8 +31,7 @@ public class CmdGrindToolsFishingRegionCreate extends GrindToolsCommand {
     @SneakyThrows
     @Override
     public void perform() {
-        Player player = (Player) sender;
-
+        Player player = me;
         String name = this.readArg();
         LootTable lootTable = this.readArg();
 
@@ -39,26 +40,28 @@ public class CmdGrindToolsFishingRegionCreate extends GrindToolsCommand {
                 .anyMatch(fishingCuboid -> fishingCuboid.getName().equalsIgnoreCase(name));
 
         if (alreadyExists) {
-            player.sendMessage(Utils.prefixAndColor("%prefix% &cThere is already a fishing region with that name."));
+            Utils.msg(me, MLang.get().fishingRegionAlreadyExists);
             return;
         }
 
         LocalSession session = GrindToolsPlugin.get().getWorldEdit().getSession(player);
 
         if (session == null) {
-            player.sendMessage(Utils.prefixAndColor("%prefix% &cPlease make a selection with the worldedit wand!"));
+            Utils.msg(me, MLang.get().makeSelectionWithWorldEdit);
             return;
         }
 
         Region selection = GrindToolsPlugin.get().getWorldEdit().getSession(player).getSelection();
 
         if (selection == null) {
-            player.sendMessage(Utils.prefixAndColor("%prefix% &cPlease make a selection with the worldedit wand!"));
+            Utils.msg(me, MLang.get().makeSelectionWithWorldEdit);
             return;
         }
 
         LootTableConf.get().fishingRegions.add(new FishingCuboid(selection.getMinimumPoint(), selection.getMaximumPoint(), Bukkit.getWorld(selection.getWorld().getName()), name, lootTable.getId()));
         MConf.get().changed();
-        player.sendMessage(Utils.prefixAndColor("%prefix% &aThat fishing region has been created."));
+        Utils.msg(me, MLang.get().fishingRegionCreated,
+                new Pair<>("%name%", name)
+        );
     }
 }

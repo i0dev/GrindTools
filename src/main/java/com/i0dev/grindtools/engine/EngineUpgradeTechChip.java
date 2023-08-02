@@ -1,5 +1,6 @@
 package com.i0dev.grindtools.engine;
 
+import com.i0dev.grindtools.GrindToolsPlugin;
 import com.i0dev.grindtools.action.ActionChooseUpgrade;
 import com.i0dev.grindtools.entity.MConf;
 import com.i0dev.grindtools.entity.TechChipConfig;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class EngineUpgradeTechChip extends Engine {
@@ -67,20 +69,20 @@ public class EngineUpgradeTechChip extends Engine {
 
         PersistentDataContainer pdc = itemInHand.getItemMeta().getPersistentDataContainer();
 
-        for (TechChips value : TechChips.values()) {
+        Arrays.stream(TechChips.values()).forEach(value -> {
             TechChipConfigEntry techChipConfigEntry = chipConfig.getTechChipConfigById(value.name());
 
-            if (!techChipConfigEntry.getApplicableTools().contains(type)) break;
+            if (!techChipConfigEntry.getApplicableTools().contains(type)) return;
 
-            int level = Integer.parseInt(pdc.getOrDefault(GrindToolBuilder.getKey("techchip-" + value.name()), PersistentDataType.STRING, "0"));
-            int price = level >= techChipConfigEntry.getMaxLevel() ? 0 : techChipConfigEntry.getLevels().stream().filter(lvl -> lvl.getLevel() == level + 1).findFirst().get().getPrice();
+            int level = Integer.parseInt(pdc.getOrDefault(GrindToolBuilder.getKey("techchip-" + value.name()), PersistentDataType.STRING, "-99"));
+            int price = level == -99 ? 0 : level >= techChipConfigEntry.getMaxLevel() ? 0 : techChipConfigEntry.getLevels().stream().filter(lvl -> lvl.getLevel() == level + 1).findFirst().get().getPrice();
             ItemStack itemStack = techChipConfigEntry.getUpgradeItemStack(level, price);
             chestGui.getInventory().setItem(value.getUpgradeSlot(), itemStack);
 
-            if (level != 0 && level <= techChipConfigEntry.getMaxLevel()) {
+            if (level != -99 && level <= techChipConfigEntry.getMaxLevel()) {
                 chestGui.setAction(value.getUpgradeSlot(), new ActionChooseUpgrade(itemInHand, value, level, price));
             }
-        }
+        });
 
         return chestGui.getInventory();
     }

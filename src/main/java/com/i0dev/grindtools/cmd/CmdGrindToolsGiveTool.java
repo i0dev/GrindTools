@@ -1,11 +1,12 @@
 package com.i0dev.grindtools.cmd;
 
 import com.i0dev.grindtools.cmd.type.TypeTier;
-import com.i0dev.grindtools.cmd.type.TypeTool;
 import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.Tier;
 import com.i0dev.grindtools.entity.object.Tools;
 import com.i0dev.grindtools.util.GrindToolBuilder;
+import com.i0dev.grindtools.util.Pair;
+import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.Visibility;
 import com.massivecraft.massivecore.command.type.sender.TypePlayer;
@@ -16,7 +17,6 @@ public class CmdGrindToolsGiveTool extends GrindToolsCommand {
 
     public CmdGrindToolsGiveTool() {
         this.addParameter(TypePlayer.get(), "player");
-        this.addParameter(TypeTool.get(), "tool");
         this.addParameter(TypeTier.get(), "tier");
         this.setVisibility(Visibility.SECRET);
     }
@@ -24,55 +24,55 @@ public class CmdGrindToolsGiveTool extends GrindToolsCommand {
     @Override
     public void perform() throws MassiveException {
         Player player = this.readArgAt(0);
-        Tools tool = this.readArgAt(1);
-        String tierString = this.readArgAt(2);
+        String tierString = this.readArgAt(1);
 
         // check if tier belongs to tool
-        Tier tier = getTier(tool, tierString);
-        if (tier == null) {
-            msg("Tier " + tierString + " does not exist for tool " + tool.name());
+        Pair<Tier, Tools> pair = getTier(tierString);
+        if (pair == null) {
+            Utils.msg(sender, MLang.get().tierDoesntExist);
             return;
         }
+
+        Tier tier = pair.getKey();
+        Tools tool = pair.getValue();
 
         ItemStack itemStack = GrindToolBuilder.buildNewItem(tier, tool);
 
         // give tool to player
         player.getInventory().addItem(itemStack);
-        msg("Gave " + player.getName() + " a " + tierString + " " + tool.name());
+        Utils.msg(sender, MLang.get().gaveTool,
+                new Pair<>("%tier%", tier.getId()),
+                new Pair<>("%tool%", tool.name()),
+                new Pair<>("%player%", player.getName())
+        );
     }
 
 
-    public Tier getTier(Tools tool, String tierName) {
-        switch (tool) {
-            case HOE -> {
-                for (Tier tier : HoeConfig.get().getTiers()) {
-                    if (tier.getId().equalsIgnoreCase(tierName)) {
-                        return tier;
-                    }
-                }
-            }
-            case ROD -> {
-                for (Tier tier : RodConfig.get().getTiers()) {
-                    if (tier.getId().equalsIgnoreCase(tierName)) {
-                        return tier;
-                    }
-                }
-            }
-            case PICKAXE -> {
-                for (Tier tier : PickaxeConfig.get().getTiers()) {
-                    if (tier.getId().equalsIgnoreCase(tierName)) {
-                        return tier;
-                    }
-                }
-            }
-            case SWORD -> {
-                for (Tier tier : SwordConfig.get().getTiers()) {
-                    if (tier.getId().equalsIgnoreCase(tierName)) {
-                        return tier;
-                    }
-                }
+    public Pair<Tier, Tools> getTier(String tierName) {
+        for (Tier tier : HoeConfig.get().getTiers()) {
+            if (tier.getId().equalsIgnoreCase(tierName)) {
+                return new Pair<>(tier, Tools.HOE);
             }
         }
+
+        for (Tier tier : RodConfig.get().getTiers()) {
+            if (tier.getId().equalsIgnoreCase(tierName)) {
+                return new Pair<>(tier, Tools.ROD);
+            }
+        }
+
+        for (Tier tier : PickaxeConfig.get().getTiers()) {
+            if (tier.getId().equalsIgnoreCase(tierName)) {
+                return new Pair<>(tier, Tools.PICKAXE);
+            }
+        }
+
+        for (Tier tier : SwordConfig.get().getTiers()) {
+            if (tier.getId().equalsIgnoreCase(tierName)) {
+                return new Pair<>(tier, Tools.SWORD);
+            }
+        }
+
         return null;
     }
 }

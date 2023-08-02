@@ -5,6 +5,7 @@ import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.AdvancedItemConfig;
 import com.i0dev.grindtools.util.GrindToolBuilder;
 import com.i0dev.grindtools.util.RandomCollection;
+import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.Engine;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,8 +38,11 @@ public class EngineSword extends Engine {
         if (!toolTypeString.equalsIgnoreCase("SWORD")) return;
 
         if (!SwordConfig.get().getMobWhitelist().contains(e.getEntityType())) {
-            player.sendMessage("This grind sword will have no effect on this mob!");
+            Utils.msg(player, MLang.get().grindSwordNoEffect);
         }
+
+        double damageMultiplier = GrindToolBuilder.getDamageModifier(tool);
+        e.setDamage(e.getDamage() * damageMultiplier);
     }
 
     @EventHandler
@@ -53,7 +57,7 @@ public class EngineSword extends Engine {
         if (!toolTypeString.equalsIgnoreCase("SWORD")) return;
 
         if (!SwordConfig.get().getMobWhitelist().contains(e.getEntityType())) {
-            player.sendMessage("This grind sword had no effect on this mob!");
+            Utils.msg(player, MLang.get().grindSwordNoEffect);
             return;
         }
 
@@ -63,28 +67,28 @@ public class EngineSword extends Engine {
 
         if (Math.random() < treasureHunterPercent) {
             // do treasure hunter stuff
-            player.sendMessage("You found a treasure!");
+            Utils.msg(player, MLang.get().youFoundATreasure);
             RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(LootTableConf.get().getLootTable(SwordConfig.get().getTreasureHunterLootTableFromMob(e.getEntityType())));
             AdvancedItemConfig advancedItemConfig = randomCollection.next();
 
             advancedItemConfig.getCommands().forEach(command -> GrindToolsPlugin.get().getServer().dispatchCommand(GrindToolsPlugin.get().getServer().getConsoleSender(), command.replace("%player%", player.getName())));
 
             if (advancedItemConfig.isDropItemStack())
-                givePlayerItem(player, advancedItemConfig.getItemStack());
+                EngineOther.get().givePlayerItem(player, advancedItemConfig.getItemStack());
         }
 
         if (Math.random() < extractPercent) { // do extract  stuff
-            player.sendMessage("you extracted special items!");
+            Utils.msg(player, MLang.get().youExtractedSpecialItem);
             RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(LootTableConf.get().getLootTable(SwordConfig.get().getExtractLootTableFromMob(e.getEntityType())));
             AdvancedItemConfig advancedItemConfig = randomCollection.next();
 
             advancedItemConfig.getCommands().forEach(command -> GrindToolsPlugin.get().getServer().dispatchCommand(GrindToolsPlugin.get().getServer().getConsoleSender(), command.replace("%player%", player.getName())));
 
             if (advancedItemConfig.isDropItemStack())
-                givePlayerItem(player, advancedItemConfig.getItemStack());
+                EngineOther.get().givePlayerItem(player, advancedItemConfig.getItemStack());
         }
 
-        double currencyBoost = GrindToolBuilder.getCurrencyModifier(tool);
+        double currencyBoost = GrindToolBuilder.getCurrencyModifier(tool) * SwordConfig.get().getBaseCurrencyForMobType(e.getEntityType());
         double dropBoost = GrindToolBuilder.getDropModifier(tool);
         int currencyToGive = (int) Math.ceil(currencyBoost);
 
@@ -112,24 +116,12 @@ public class EngineSword extends Engine {
                 double moneyToGive = GrindToolBuilder.getPrice(drop);
 
                 GrindToolBuilder.givePlayerMoney(player, moneyToGive);
-                player.sendMessage("You sold " + drop.getAmount() + " " + drop.getType().name() + " for $" + moneyToGive);
             }
             e.getDrops().clear();
         }
     }
 
 
-    public void givePlayerItem(Player player, ItemStack item) {
-        HashMap<Integer, ItemStack> toDrop = player.getInventory().addItem(item);
-
-        // if the player's inventory is full, drop the items on the ground
-        if (!toDrop.isEmpty()) {
-            for (ItemStack itemStack : toDrop.values()) {
-                player.getWorld().dropItem(player.getLocation(), itemStack);
-            }
-            player.sendMessage("Your inventory is full, so the item was dropped on the ground.");
-        }
-    }
 
 
 }

@@ -6,6 +6,7 @@ import com.i0dev.grindtools.entity.object.AdvancedItemConfig;
 import com.i0dev.grindtools.util.GrindToolBuilder;
 import com.i0dev.grindtools.util.ItemBuilder;
 import com.i0dev.grindtools.util.RandomCollection;
+import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.Engine;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class EngineHoe extends Engine {
@@ -42,7 +42,7 @@ public class EngineHoe extends Engine {
         // Make it so that the player can only break sugar cane with a harvester hoe
         if (!e.getBlock().getType().equals(Material.SUGAR_CANE)) {
             e.setCancelled(true);
-            player.sendMessage("You can only break sugar cane with a harvester hoe!");
+            Utils.msg(player, MLang.get().canOnlyBreakCaneWithHoe);
             return;
         }
 
@@ -66,7 +66,7 @@ public class EngineHoe extends Engine {
 
         // -- TechChips  -- //
 
-        double currencyBoost = GrindToolBuilder.getCurrencyModifier(tool);
+        double currencyBoost = GrindToolBuilder.getCurrencyModifier(tool) * HoeConfig.get().getBaseCurrency();
         double dropBoost = GrindToolBuilder.getDropModifier(tool);
         double treasureHunterPercent = GrindToolBuilder.getTreasureHunterPercent(tool);
 
@@ -75,14 +75,15 @@ public class EngineHoe extends Engine {
 
         if (Math.random() < treasureHunterPercent) {
             // do treasure hunter stuff
-            player.sendMessage("You found a treasure!");
+            Utils.msg(player, MLang.get().youFoundATreasure);
+
             RandomCollection<AdvancedItemConfig> randomCollection = RandomCollection.buildFromLootTableConfig(LootTableConf.get().getLootTable(HoeConfig.get().getTreasureHunterLootTable()));
             AdvancedItemConfig advancedItemConfig = randomCollection.next();
 
             advancedItemConfig.getCommands().forEach(command -> GrindToolsPlugin.get().getServer().dispatchCommand(GrindToolsPlugin.get().getServer().getConsoleSender(), command.replace("%player%", player.getName())));
 
             if (advancedItemConfig.isDropItemStack())
-                givePlayerItem(player, advancedItemConfig.getItemStack());
+                EngineOther.get().givePlayerItem(player, advancedItemConfig.getItemStack());
         }
 
 
@@ -97,9 +98,8 @@ public class EngineHoe extends Engine {
             double moneyToGive = GrindToolBuilder.getPrice(new ItemBuilder(Material.SUGAR_CANE).amount(caneBlocksBroken));
 
             GrindToolBuilder.givePlayerMoney(player, moneyToGive);
-            player.sendMessage("You sold " + caneBlocksBroken + " sugar cane for $" + moneyToGive);
         } else {        // else directly give the player the cane
-            givePlayerItem(player, new ItemStack(Material.SUGAR_CANE, caneBlocksBroken));
+            EngineOther.get().givePlayerItem(player, new ItemStack(Material.SUGAR_CANE, caneBlocksBroken));
         }
     }
 
@@ -115,16 +115,6 @@ public class EngineHoe extends Engine {
     }
 
 
-    public void givePlayerItem(Player player, ItemStack item) {
-        HashMap<Integer, ItemStack> toDrop = player.getInventory().addItem(item);
 
-        // if the player's inventory is full, drop the items on the ground
-        if (!toDrop.isEmpty()) {
-            for (ItemStack itemStack : toDrop.values()) {
-                player.getWorld().dropItem(player.getLocation(), itemStack);
-            }
-            player.sendMessage("Your inventory is full, so the item was dropped on the ground.");
-        }
-    }
 
 }

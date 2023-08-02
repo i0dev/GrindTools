@@ -3,16 +3,17 @@ package com.i0dev.grindtools.util;
 import com.i0dev.grindtools.GrindToolsPlugin;
 import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.*;
-import net.brcdev.shopgui.ShopGuiPlugin;
 import net.brcdev.shopgui.ShopGuiPlusApi;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -26,6 +27,15 @@ public class GrindToolBuilder {
 
         ItemMeta meta1 = item.getItemMeta();
         meta1.setDisplayName(Utils.color(tier.getDisplayName()));
+        meta1.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta1.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
+        meta1.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta1.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        meta1.addItemFlags(ItemFlag.HIDE_DYE);
+        meta1.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        meta1.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        meta1.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta1.setUnbreakable(true);
         item.setItemMeta(meta1);
 
         item.setType(tier.getMaterial());
@@ -40,28 +50,27 @@ public class GrindToolBuilder {
         applyTag(item, "modifier-dropRatesMultiplier", String.valueOf(tier.getDropRatesMultiplier()));
         applyTag(item, "modifier-everythingMultiplier", String.valueOf(tier.getEverythingMultiplier()));
 
-
         switch (type) {
             case HOE -> {
-                applyTag(item, "baseCurrency", String.valueOf(HoeConfig.get().getBaseCurrency()));
                 ItemMeta meta = item.getItemMeta();
                 meta.setLore(formatLore(HoeConfig.get().getLoreFormat(), item));
                 item.setItemMeta(meta);
             }
             case PICKAXE -> {
-                applyTag(item, "baseCurrency", String.valueOf(PickaxeConfig.get().getBaseCurrency()));
                 ItemMeta meta = item.getItemMeta();
                 meta.setLore(formatLore(PickaxeConfig.get().getLoreFormat(), item));
+                int efficiencyLevel = getEfficiencyLevel(item);
+                if (efficiencyLevel != 0) {
+                    meta.addEnchant(Enchantment.DIG_SPEED, efficiencyLevel, true);
+                }
                 item.setItemMeta(meta);
             }
             case ROD -> {
-                applyTag(item, "baseCurrency", String.valueOf(RodConfig.get().getBaseCurrency()));
                 ItemMeta meta = item.getItemMeta();
                 meta.setLore(formatLore(RodConfig.get().getLoreFormat(), item));
                 item.setItemMeta(meta);
             }
             case SWORD -> {
-                applyTag(item, "baseCurrency", String.valueOf(SwordConfig.get().getBaseCurrency()));
                 ItemMeta meta = item.getItemMeta();
                 meta.setLore(formatLore(SwordConfig.get().getLoreFormat(), item));
                 item.setItemMeta(meta);
@@ -87,52 +96,69 @@ public class GrindToolBuilder {
             case ROD ->
                     newLore.replaceAll(s -> Utils.color(s.replace("%description%", RodConfig.get().getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
             case SWORD ->
-                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", SwordConfig.get().getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
+                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", SwordConfig.get().getTierFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
         }
 
 
-        String chipFormat = "&7- &a%chip% &7(Level %level%)";
-
         TechChipConfig cnf = TechChipConfig.get();
 
-        int baseCurrency = Integer.parseInt(getPDC(item).get(getKey("baseCurrency"), PersistentDataType.STRING));
 
-        double tokenBoost = Math.round((getCurrencyModifier(item) - baseCurrency) * 100.0) / 100.0;
+        double tokenBoost = Math.round((getCurrencyModifier(item)) * 1000.0) / 1000.0;
         double expBoost = Math.round(getExpModifier(item) * 100.0) / 100.0;
-        double dropBoost = Math.round(getDropModifier(item) * 100.0) / 100.0;
-        double treasureHunter = Math.round(getTreasureHunterPercent(item) * 10000.0) / 10000.0;
-        double extract = Math.round(getExtractPercent(item) * 1000.0) / 1000.0;
+        double dropBoost = Math.round(getDropModifierDefault(item) * 100.0) / 100.0;
+        double treasureHunter = 100 * Math.round(getTreasureHunterPercent(item) * 10000.0) / 10000.0;
+        double extract = 100 * Math.round(getExtractPercent(item) * 1000.0) / 1000.0;
         double averageLure = Math.round(((double) (getLureMin(item) + getLureMax(item)) / 2 / 20) * 10.0) / 10.0;
         double damage = Math.round(getDamageModifier(item) * 10.0) / 10.0;
+        int efficiency = getEfficiencyLevel(item);
 
         List<String> techChipsToAdd = new ArrayList<>();
         List<String> modifiersToAdd = new ArrayList<>();
 
-        getAllTechChips(item).forEach((techChip, multiplierLevel) -> techChipsToAdd.add(Utils.color(chipFormat
+        getAllTechChips(item).forEach((techChip, multiplierLevel) -> techChipsToAdd.add(Utils.color(MConf.get().getTechChipLoreFormat()
                 .replace("%chip%", techChip.getDisplayName())
                 .replace("%level%", multiplierLevel == null ? "1" : String.valueOf(multiplierLevel.getLevel()))
         )));
 
-        if (tokenBoost > 1 && isAppliedToTool(type, cnf.token_boost)) {
-            modifiersToAdd.add(Utils.color("&7- &6Token Boost &7(x" + tokenBoost + ")"));
+        if (tokenBoost != 0 && isAppliedToTool(type, cnf.token_boost)) {
+            modifiersToAdd.add(Utils.color(MConf.get().getModifierFormatTokenBoost()
+                    .replace("%amount%", String.valueOf(tokenBoost))
+            ));
         }
-        if (expBoost > 1 && isAppliedToTool(type, cnf.exp_boost)) {
-            modifiersToAdd.add(Utils.color("&7- &6Exp Boost &7(x" + expBoost + ")"));
+        if (expBoost != 0 && isAppliedToTool(type, cnf.exp_boost)) {
+            modifiersToAdd.add(Utils.color(MConf.get().getModifierFormatExpBoost()
+                    .replace("%amount%", String.valueOf(expBoost))
+            ));
         }
-        if (dropBoost > 1 && isAppliedToTool(type, cnf.drop_boost)) {
-            modifiersToAdd.add(Utils.color("&7- &6Drop Boost &7(x" + dropBoost + ")"));
+        if (dropBoost != 0 && isAppliedToTool(type, cnf.drop_boost)) {
+            modifiersToAdd.add(Utils.color(MConf.get().getModifierFormatDropBoost()
+                    .replace("%amount%", String.valueOf(dropBoost))
+            ));
         }
-        if (treasureHunter > 1 && isAppliedToTool(type, cnf.treasure_hunter)) {
-            modifiersToAdd.add(Utils.color("&7- &6Treasure Hunter &7(" + treasureHunter + "%)"));
+        if (treasureHunter != 0 && isAppliedToTool(type, cnf.treasure_hunter)) {
+            modifiersToAdd.add(Utils.color(MConf.get().getModifierFormatTreasureHunter()
+                    .replace("%amount%", String.valueOf(treasureHunter))
+            ));
         }
-        if (extract > 1 && isAppliedToTool(type, cnf.extract)) {
-            modifiersToAdd.add(Utils.color("&7- &6Extract &7(" + extract + "%)"));
+        if (extract != 0 && isAppliedToTool(type, cnf.extract)) {
+            modifiersToAdd.add(Utils.color(MConf.get().getModifierFormatExtract()
+                    .replace("%amount%", String.valueOf(extract))
+            ));
         }
         if (isAppliedToTool(type, cnf.lure)) {
-            modifiersToAdd.add(Utils.color("&7- &6Lure &7(" + averageLure + "s avg catch time)"));
+            modifiersToAdd.add(Utils.color(MConf.get().getModifierFormatLure()
+                    .replace("%amount%", String.valueOf(averageLure))
+            ));
         }
-        if (damage > 1 && isAppliedToTool(type, cnf.damage)) {
-            modifiersToAdd.add(Utils.color("&7- &6Damage &7(x" + damage + ")"));
+        if (damage != 0 && isAppliedToTool(type, cnf.damage)) {
+            modifiersToAdd.add(Utils.color(MConf.get().getModifierFormatDamage()
+                    .replace("%amount%", String.valueOf(damage))
+            ));
+        }
+        if (efficiency != 0 && isAppliedToTool(type, cnf.efficiency)) {
+            modifiersToAdd.add(Utils.color(MConf.get().getModifierFormatEfficiency()
+                    .replace("%amount%", String.valueOf(efficiency))
+            ));
         }
 
         List<String> toRemove = new ArrayList<>();
@@ -224,26 +250,34 @@ public class GrindToolBuilder {
         return Double.parseDouble(getPDC(tool).get(getKey("modifier-everythingMultiplier"), PersistentDataType.STRING));
     }
 
-    public static double getDropModifier(ItemStack tool) {
+
+    public static double getDropModifierDefault(ItemStack tool) {
         TechChipConfig cnf = TechChipConfig.get();
 
         double dropRatesMultiplier = Double.parseDouble(getPDC(tool).get(getKey("modifier-dropRatesMultiplier"), PersistentDataType.STRING));
         int dropBoostLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-drop_boost"), PersistentDataType.STRING, "0"));
 
-        // get the 0.XX of the dropRatesMultiplier
-        double dropRatesMultiplierDecimal = dropRatesMultiplier - Math.floor(dropRatesMultiplier);
-        double percentChanceToRoundUp = dropRatesMultiplierDecimal * 100;
-        dropRatesMultiplier = Math.floor(dropRatesMultiplier) + (ThreadLocalRandom.current().nextInt(100) < percentChanceToRoundUp ? 1 : 0);
-
         return getEverythingMultiplier(tool) * (dropRatesMultiplier * dropBoostLevel == 0 ? 1 : cnf.drop_boost.getLevels().stream().filter(lvl -> lvl.getLevel() == dropBoostLevel).findFirst().orElseThrow().getMultiplier());
+    }
+
+
+    public static double getDropModifier(ItemStack tool) {
+
+        double totalMultiplier = getDropModifierDefault(tool);
+
+        // get the 0.XX of the dropRatesMultiplier
+        double dropRatesMultiplierDecimal = totalMultiplier - Math.floor(totalMultiplier);
+        double percentChanceToRoundUp = dropRatesMultiplierDecimal * 100;
+        totalMultiplier = Math.floor(totalMultiplier) + (ThreadLocalRandom.current().nextInt(100) < percentChanceToRoundUp ? 1 : 0);
+
+        return totalMultiplier;
     }
 
     public static double getCurrencyModifier(ItemStack tool) {
         TechChipConfig cnf = TechChipConfig.get();
-        int baseCurrency = Integer.parseInt(getPDC(tool).get(getKey("baseCurrency"), PersistentDataType.STRING));
 
         int tokenBoostLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-token_boost"), PersistentDataType.STRING, "0"));
-        return baseCurrency * getEverythingMultiplier(tool) * (tokenBoostLevel == 0 ? 1 : cnf.token_boost.getLevels().stream().filter(lvl -> lvl.getLevel() == tokenBoostLevel).findFirst().orElseThrow().getMultiplier());
+        return getEverythingMultiplier(tool) * (tokenBoostLevel == 0 ? 1 : cnf.token_boost.getLevels().stream().filter(lvl -> lvl.getLevel() == tokenBoostLevel).findFirst().orElseThrow().getMultiplier());
     }
 
     public static double getExpModifier(ItemStack tool) {
@@ -255,9 +289,12 @@ public class GrindToolBuilder {
 
     public static double getTreasureHunterPercent(ItemStack tool) {
         TechChipConfig cnf = TechChipConfig.get();
-
+        Tools toolType = Tools.valueOf(getPDC(tool).get(getKey("tool-type"), PersistentDataType.STRING));
         int treasureHunterLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-treasure_hunter"), PersistentDataType.STRING, "0"));
-        return getEverythingMultiplier(tool) * (treasureHunterLevel == 0 ? 0 : cnf.treasure_hunter.getLevels().stream().filter(lvl -> lvl.getLevel() == treasureHunterLevel).findFirst().orElseThrow().getMultiplier());
+
+        double perToolMultiplier = cnf.treasure_hunter_multiplier_per_tool_override.get(toolType);
+
+        return perToolMultiplier * getEverythingMultiplier(tool) * (treasureHunterLevel == 0 ? 0 : cnf.treasure_hunter.getLevels().stream().filter(lvl -> lvl.getLevel() == treasureHunterLevel).findFirst().orElseThrow().getMultiplier());
     }
 
     public static double getExtractPercent(ItemStack tool) {
@@ -265,6 +302,11 @@ public class GrindToolBuilder {
 
         int extractLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-extract"), PersistentDataType.STRING, "0"));
         return getEverythingMultiplier(tool) * (extractLevel == 0 ? 0 : cnf.extract.getLevels().stream().filter(lvl -> lvl.getLevel() == extractLevel).findFirst().orElseThrow().getMultiplier());
+    }
+
+
+    public static boolean isSoulbound(ItemStack tool) {
+        return getPDC(tool).has(getKey("techchip-soulbound"), PersistentDataType.STRING);
     }
 
     public static int getLureMin(ItemStack tool) {
@@ -287,6 +329,14 @@ public class GrindToolBuilder {
 
         int damageLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-damage"), PersistentDataType.STRING, "0"));
         return getEverythingMultiplier(tool) * (damageLevel == 0 ? 1 : cnf.damage.getLevels().stream().filter(lvl -> lvl.getLevel() == damageLevel).findFirst().orElseThrow().getMultiplier());
+    }
+
+
+    public static int getEfficiencyLevel(ItemStack tool) {
+        TechChipConfig cnf = TechChipConfig.get();
+
+        int efficiencyLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-efficiency"), PersistentDataType.STRING, "0"));
+        return efficiencyLevel == 0 ? 0 : cnf.efficiency.getLevels().stream().filter(lvl -> lvl.getLevel() == efficiencyLevel).findFirst().orElseThrow().getLevel();
     }
 
     public static boolean isAutoSell(ItemStack tool) {

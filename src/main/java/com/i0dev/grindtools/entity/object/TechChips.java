@@ -12,8 +12,9 @@ public enum TechChips {
     TOKEN_BOOST("Token Boost", 24),
     EXP_BOOST("Exp Boost", 25),
     EXTRACT("Extract", 32),
-    LURE("Lure", 33),
-    DAMAGE("Damage", 34);
+    LURE("Lure", 25),
+    DAMAGE("Damage", 33),
+    EFFICIENCY("Efficiency", 32);
 
 
     private final String displayName;

@@ -1,7 +1,9 @@
 package com.i0dev.grindtools.cmd;
 
 import com.i0dev.grindtools.cmd.type.TypeFishingRegion;
+import com.i0dev.grindtools.entity.MLang;
 import com.i0dev.grindtools.entity.object.FishingCuboid;
+import com.i0dev.grindtools.util.Pair;
 import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.Visibility;
@@ -26,7 +28,7 @@ public class CmdGrindToolsFishingRegionTeleport extends GrindToolsCommand {
         Player player = this.readArg(me);
 
         if (cuboid == null) {
-            player.sendMessage(Utils.prefixAndColor("%prefix% &cThere is no fishing region with that name."));
+            Utils.msg(sender, MLang.get().fishingRegionDoesntExist);
             return;
         }
 
@@ -37,6 +39,7 @@ public class CmdGrindToolsFishingRegionTeleport extends GrindToolsCommand {
         Location location = new Location(cuboid.getCuboid().world, x1, y1, z1);
         player.teleport(location);
 
-        player.sendMessage(Utils.prefixAndColor("%prefix% &aYou have been teleported to the %region% fishing region.").replace("%region%", cuboid.getName()));
+        Utils.msg(player, MLang.get().fishingRegionTeleported,
+                new Pair<>("%name%", cuboid.getName()));
     }
 }

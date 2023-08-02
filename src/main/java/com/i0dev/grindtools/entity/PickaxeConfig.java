@@ -20,10 +20,6 @@ public class PickaxeConfig extends Entity<PickaxeConfig> {
         return i;
     }
 
-
-
-    int baseCurrency = 3; //  amount of currency per cane broken
-
     public Tier getFromId(String id) {
         for (Tier tier : tiers) {
             if (tier.getId().equalsIgnoreCase(id)) {

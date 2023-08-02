@@ -1,8 +1,6 @@
 package com.i0dev.grindtools.entity;
 
-import com.i0dev.grindtools.entity.object.MultiplierLevel;
-import com.i0dev.grindtools.entity.object.TechChipConfigEntry;
-import com.i0dev.grindtools.entity.object.Tools;
+import com.i0dev.grindtools.entity.object.*;
 import com.massivecraft.massivecore.command.editor.annotation.EditorName;
 import com.massivecraft.massivecore.store.Entity;
 import com.massivecraft.massivecore.util.MUtil;
@@ -11,6 +9,7 @@ import org.bukkit.Material;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @EditorName("config")
@@ -51,6 +50,9 @@ public class TechChipConfig extends Entity<TechChipConfig> {
             }
             case "DAMAGE" -> {
                 return damage;
+            }
+            case "EFFICIENCY" -> {
+                return efficiency;
             }
             default -> {
                 throw new IllegalStateException("Unexpected value: " + id.toUpperCase());
@@ -169,14 +171,22 @@ public class TechChipConfig extends Entity<TechChipConfig> {
             true,
             Arrays.asList(Tools.values()),
             MUtil.list(
-                    new MultiplierLevel(1, 0, 0.05),
-                    new MultiplierLevel(2, 100, 0.10),
-                    new MultiplierLevel(3, 200, 0.15),
-                    new MultiplierLevel(4, 300, 0.20),
-                    new MultiplierLevel(5, 400, 0.25)
+                    new MultiplierLevel(1, 0, 0.0),
+                    new MultiplierLevel(2, 100, 0.0),
+                    new MultiplierLevel(3, 200, 0.0),
+                    new MultiplierLevel(4, 300, 0.0),
+                    new MultiplierLevel(5, 400, 0.0)
             ),
             5
     );
+
+    public Map<Tools, Double> treasure_hunter_multiplier_per_tool_override = MUtil.map(
+            Tools.PICKAXE, 0.70,
+            Tools.ROD, 1.00,
+            Tools.SWORD, 0.05,
+            Tools.HOE, 0.01
+    );
+
 
     public TechChipConfigEntry extract = new TechChipConfigEntry(
             Material.LAPIS_LAZULI,
@@ -222,6 +232,22 @@ public class TechChipConfig extends Entity<TechChipConfig> {
                     new MultiplierLevel(3, 200, 2.5),
                     new MultiplierLevel(4, 300, 3.0),
                     new MultiplierLevel(5, 400, 3.5)
+            ),
+            5
+    );
+
+    public TechChipConfigEntry efficiency = new TechChipConfigEntry(
+            Material.QUARTZ,
+            "&a&lEfficiency &7(level %level%)",
+            "&7increases the speed of your pickaxe",
+            true,
+            MUtil.list(Tools.PICKAXE),
+            MUtil.list(
+                    new MultiplierLevel(1, 0, 1.0),
+                    new MultiplierLevel(2, 100, 2.0),
+                    new MultiplierLevel(3, 200, 3.0),
+                    new MultiplierLevel(4, 300, 4.0),
+                    new MultiplierLevel(5, 400, 5.0)
             ),
             5
     );

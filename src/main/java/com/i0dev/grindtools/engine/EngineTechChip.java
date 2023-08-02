@@ -4,6 +4,7 @@ import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.TechChipConfigEntry;
 import com.i0dev.grindtools.entity.object.Tools;
 import com.i0dev.grindtools.util.GrindToolBuilder;
+import com.i0dev.grindtools.util.Pair;
 import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.Engine;
 import org.bukkit.Material;
@@ -45,34 +46,40 @@ public class EngineTechChip extends Engine {
         if (techChip == null || techChip.getItemMeta() == null || techChip.getType() == Material.AIR) return;
         if (!(e.getWhoClicked() instanceof Player player)) return;
 
-        ItemMeta toolMeta = tool.getItemMeta();
-        PersistentDataContainer toolPDC = toolMeta.getPersistentDataContainer();
-        List<String> toolKeys = toolPDC.getKeys().stream().map(NamespacedKey::getKey).toList();
-        String tool_type = toolPDC.get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING);
-        if (tool_type == null) return;
-
         ItemMeta techChipMeta = techChip.getItemMeta();
         PersistentDataContainer techChipPDC = techChipMeta.getPersistentDataContainer();
         List<String> techChipKeys = techChipPDC.getKeys().stream().map(NamespacedKey::getKey).toList();
         if (!techChipKeys.contains("techchip-item")) return;
         String techChip_type = techChipKeys.stream().filter(key -> key.startsWith("techchip-") && !key.startsWith("techchip-item")).findFirst().orElse(null);
         if (techChip_type == null) return;
+
+        ItemMeta toolMeta = tool.getItemMeta();
+        PersistentDataContainer toolPDC = toolMeta.getPersistentDataContainer();
+        List<String> toolKeys = toolPDC.getKeys().stream().map(NamespacedKey::getKey).toList();
+        String tool_type = toolPDC.get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING);
+        if (tool_type == null) {
+            Utils.msg(player, MLang.get().notGrindTool);
+            return;
+        }
+
         techChip_type = techChip_type.replace("techchip-", "");
         TechChipConfigEntry techChipConfigEntry = TechChipConfig.get().getTechChipConfigById(techChip_type.replace("techchip-", ""));
 
 
         if (!Boolean.parseBoolean(toolPDC.get(GrindToolBuilder.getKey("upgradable"), PersistentDataType.STRING))) {
-            player.sendMessage(Utils.color("&cThis tool is not upgradable!"));
+            Utils.msg(player, MLang.get().toolNotUpgradable);
             return;
         }
 
         if (!techChipConfigEntry.getApplicableTools().contains(Tools.valueOf(tool_type.toUpperCase(Locale.ENGLISH)))) {
-            player.sendMessage(Utils.color("&cYou can apply this techchip to: &a" + techChipConfigEntry.getApplicableTools().stream().map(tools -> tools.toString().toLowerCase()).collect(Collectors.joining(", "))));
+            Utils.msg(player, MLang.get().canOnlyApplyTechChipTo,
+                    new Pair<>("%tools%", techChipConfigEntry.getApplicableTools().stream().map(tools -> tools.toString().toLowerCase()).collect(Collectors.joining(", ")))
+            );
             return;
         }
 
         if (toolKeys.contains("techchip-" + techChip_type.toLowerCase())) {
-            player.sendMessage(Utils.color("&cYou already have this techchip applied to this tool, you can upgrade it with &7/grindtools upgrade &cwhile holding the tool"));
+            Utils.msg(player, MLang.get().techChipAlreadyApplied);
             return;
         }
 
@@ -84,8 +91,7 @@ public class EngineTechChip extends Engine {
 
         switch (Tools.valueOf(tool_type)) {
             case HOE -> toolMeta.setLore(GrindToolBuilder.formatLore(HoeConfig.get().getLoreFormat(), tool));
-            case PICKAXE ->
-                    toolMeta.setLore(GrindToolBuilder.formatLore(PickaxeConfig.get().getLoreFormat(), tool));
+            case PICKAXE -> toolMeta.setLore(GrindToolBuilder.formatLore(PickaxeConfig.get().getLoreFormat(), tool));
             case SWORD -> toolMeta.setLore(GrindToolBuilder.formatLore(SwordConfig.get().getLoreFormat(), tool));
             case ROD -> toolMeta.setLore(GrindToolBuilder.formatLore(RodConfig.get().getLoreFormat(), tool));
         }
@@ -96,7 +102,9 @@ public class EngineTechChip extends Engine {
         e.getView().setCursor(null);
         player.updateInventory();
 
-        player.sendMessage(Utils.color("&aYou have applied the techchip &f" + techChip_type + "&a to your tool!"));
+        Utils.msg(player, MLang.get().appliedTechChip,
+                new Pair<>("%techChip%", techChip_type)
+        );
     }
 
 

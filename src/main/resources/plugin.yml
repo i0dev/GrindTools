@@ -4,6 +4,7 @@ main: com.i0dev.grindtools.GrindToolsPlugin
 website: ${project.url}
 authors: [ i01 ]
 depend: [ MassiveCore , ShopGUIPlus ]
+softdepend: [ PlaceholderAPI ]
 description: ${project.description}
 api-version: 1.20
 permissions:

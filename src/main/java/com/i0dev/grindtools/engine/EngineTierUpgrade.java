@@ -3,6 +3,7 @@ package com.i0dev.grindtools.engine;
 import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.*;
 import com.i0dev.grindtools.util.GrindToolBuilder;
+import com.i0dev.grindtools.util.Pair;
 import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.Engine;
 import org.bukkit.Material;
@@ -45,20 +46,32 @@ public class EngineTierUpgrade extends Engine {
         if (tierUpgrade == null || tierUpgrade.getItemMeta() == null || tierUpgrade.getType() == Material.AIR) return;
         if (!(e.getWhoClicked() instanceof Player player)) return;
 
-        ItemMeta toolMeta = tool.getItemMeta();
-        PersistentDataContainer toolPDC = toolMeta.getPersistentDataContainer();
-        List<String> toolKeys = toolPDC.getKeys().stream().map(NamespacedKey::getKey).toList();
-        String toolTypeString = toolPDC.get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING);
-        if (toolTypeString == null) return;
-        Tools toolType = Tools.valueOf(toolTypeString.toUpperCase(Locale.ENGLISH));
-
         ItemMeta tierUpgradeMeta = tierUpgrade.getItemMeta();
         PersistentDataContainer tierUpgradePDC = tierUpgradeMeta.getPersistentDataContainer();
         List<String> tierUpgradeKeys = tierUpgradePDC.getKeys().stream().map(NamespacedKey::getKey).toList();
 
-        if (!tierUpgradeKeys.contains("tier-upgrade-item-next") && !tierUpgradeKeys.contains("tier-upgrade-item")) return;
+        if (!tierUpgradeKeys.contains("tier-upgrade-item-next") && !tierUpgradeKeys.contains("tier-upgrade-item"))
+            return;
+
+        ItemMeta toolMeta = tool.getItemMeta();
+        PersistentDataContainer toolPDC = toolMeta.getPersistentDataContainer();
+        String toolTypeString = toolPDC.get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING);
+
+        if (toolTypeString == null) {
+            Utils.msg(player, MLang.get().notGrindTool);
+            return;
+        }
+
+        if (!Boolean.parseBoolean(toolPDC.get(GrindToolBuilder.getKey("upgradable"), PersistentDataType.STRING))) {
+            Utils.msg(player, MLang.get().toolNotUpgradable);
+            return;
+        }
+
+        Tools toolType = Tools.valueOf(toolTypeString.toUpperCase(Locale.ENGLISH));
+
 
         String tierOnTool = toolPDC.get(GrindToolBuilder.getKey("tier"), PersistentDataType.STRING);
+
 
         ItemStack newTool;
 
@@ -68,14 +81,16 @@ public class EngineTierUpgrade extends Engine {
             TierUpgradeNext upgrade = UpgradeConfig.get().getNextTierUpgradeById(upgradeString.replace("tier-upgrade-next-", ""));
 
             if (!upgrade.getApplicableTools().contains(toolType)) {
-                player.sendMessage(Utils.color("&cYou can apply this tier upgrade to: &a" + upgrade.getApplicableTools().stream().map(tools -> tools.toString().toLowerCase()).collect(Collectors.joining(", "))));
+                Utils.msg(player, MLang.get().canOnlyApplyTierUpgradeTo,
+                        new Pair<>("%tools%", upgrade.getApplicableTools().stream().map(tools -> tools.toString().toLowerCase()).collect(Collectors.joining(", ")))
+                );
                 return;
             }
 
             Tier nextTier = getNextTier(toolType, tierOnTool);
 
             if (nextTier == null) {
-                player.sendMessage(Utils.color("&cThis tool is already at the highest tier!"));
+                Utils.msg(player, MLang.get().toolAlreadyMaxTier);
                 return;
             }
 
@@ -85,12 +100,16 @@ public class EngineTierUpgrade extends Engine {
             TierUpgrade upgrade = UpgradeConfig.get().getTierUpgradeById(upgradeString.replace("tier-upgrade-", ""));
 
             if (!upgrade.getApplicableTools().contains(toolType)) {
-                player.sendMessage(Utils.color("&cYou can apply this tier upgrade to: &a" + upgrade.getApplicableTools().stream().map(tools -> tools.toString().toLowerCase()).collect(Collectors.joining(", "))));
+                Utils.msg(player, MLang.get().canOnlyApplyTierUpgradeTo,
+                        new Pair<>("%tools%", upgrade.getApplicableTools().stream().map(tools -> tools.toString().toLowerCase()).collect(Collectors.joining(", ")))
+                );
                 return;
             }
 
             if (!upgrade.getApplicableTiers().contains(tierOnTool)) {
-                player.sendMessage(Utils.color("&cYou can apply this tier upgrade to: &a" + upgrade.getApplicableTiers().stream().map(tier -> tier.toString().toLowerCase()).collect(Collectors.joining(", "))));
+                Utils.msg(player, MLang.get().canOnlyApplyTierUpgradeTo,
+                        new Pair<>("%tools%", upgrade.getApplicableTools().stream().map(tools -> tools.toString().toLowerCase()).collect(Collectors.joining(", ")))
+                );
                 return;
             }
 
@@ -98,11 +117,6 @@ public class EngineTierUpgrade extends Engine {
 
             Tier tier = getTier(toolType, tierToUpgradeTo);
 
-
-            if (tier == null) {
-                player.sendMessage(Utils.color("&cNo tier found with id: &a" + tierToUpgradeTo));
-                return;
-            }
             newTool = GrindToolBuilder.applyTier(tool, tier, toolType);
         }
 
@@ -112,7 +126,9 @@ public class EngineTierUpgrade extends Engine {
         e.getView().setCursor(null);
         player.updateInventory();
 
-        player.sendMessage(Utils.color("&aSuccessfully upgraded your tool to tier: &e" + newTool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tier"), PersistentDataType.STRING)));
+        Utils.msg(player, MLang.get().appliedToolUpgrade,
+                new Pair<>("%tier%", newTool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tier"), PersistentDataType.STRING))
+        );
     }
 
 

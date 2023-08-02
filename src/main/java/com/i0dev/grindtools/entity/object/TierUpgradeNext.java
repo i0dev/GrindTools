@@ -5,7 +5,9 @@ import com.i0dev.grindtools.util.ItemBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,17 @@ public class TierUpgradeNext {
                 .name(displayName)
                 .lore(itemLore(lore))
                 .addGlow(glow);
+
+
+        ItemMeta meta = item.getItemMeta();
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        meta.addItemFlags(ItemFlag.HIDE_DYE);
+        item.setItemMeta(meta);
 
         GrindToolBuilder.applyTag(item, "tier-upgrade-item-next", UUID.randomUUID().toString());
         GrindToolBuilder.applyTag(item, "tier-upgrade-next-" + id, "true");

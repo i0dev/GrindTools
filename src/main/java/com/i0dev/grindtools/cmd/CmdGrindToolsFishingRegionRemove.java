@@ -4,7 +4,9 @@ import com.i0dev.grindtools.GrindToolsPlugin;
 import com.i0dev.grindtools.cmd.type.TypeFishingRegion;
 import com.i0dev.grindtools.entity.LootTableConf;
 import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.MLang;
 import com.i0dev.grindtools.entity.object.FishingCuboid;
+import com.i0dev.grindtools.util.Pair;
 import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.Visibility;
@@ -26,12 +28,10 @@ public class CmdGrindToolsFishingRegionRemove extends GrindToolsCommand {
     @SneakyThrows
     @Override
     public void perform() throws MassiveException {
-        Player player = (Player) sender;
-
         FishingCuboid cuboid = this.readArg();
 
         if (cuboid == null) {
-            player.sendMessage(Utils.prefixAndColor("%prefix% &cThere is no fishing region with that name."));
+            Utils.msg(sender, MLang.get().fishingRegionDoesntExist);
             return;
         }
 
@@ -42,6 +42,8 @@ public class CmdGrindToolsFishingRegionRemove extends GrindToolsCommand {
             }
         }
         MConf.get().changed();
-        player.sendMessage(Utils.prefixAndColor("%prefix% &a%region% fishing region has been removed.").replace("%region%", cuboid.getName()));
+        Utils.msg(sender, MLang.get().fishingRegionRemoved,
+                new Pair<>("%name%", cuboid.getName())
+        );
     }
 }

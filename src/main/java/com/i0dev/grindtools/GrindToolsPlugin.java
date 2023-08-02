@@ -1,6 +1,7 @@
 package com.i0dev.grindtools;
 
 import com.i0dev.grindtools.entity.*;
+import com.i0dev.grindtools.integration.PlaceholderAPI;
 import com.massivecraft.massivecore.MassivePlugin;
 import com.massivecraft.massivecore.collections.MassiveList;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -28,6 +29,16 @@ public class GrindToolsPlugin extends MassivePlugin {
 
 
     @Override
+    public void onEnable() {
+        super.onEnable();
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new PlaceholderAPI(this).register();
+        } else {
+            getLogger().warning("Could not find PlaceholderAPI! This plugin is required.");
+        }
+    }
+
+    @Override
     public List<Class<?>> getClassesActiveColls() {
         return new MassiveList<>(
                 MConfColl.class,
@@ -40,7 +51,9 @@ public class GrindToolsPlugin extends MassivePlugin {
                 RodConfigColl.class,
                 SwordConfigColl.class,
                 TechChipConfigColl.class,
-                UpgradeConfigColl.class
+                UpgradeConfigColl.class,
+                OreConfigColl.class,
+                OreDataColl.class
         );
     }
 

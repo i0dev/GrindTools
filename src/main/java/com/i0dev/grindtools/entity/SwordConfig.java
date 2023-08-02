@@ -6,11 +6,13 @@ import com.i0dev.grindtools.entity.object.Tier;
 import com.massivecraft.massivecore.command.editor.annotation.EditorName;
 import com.massivecraft.massivecore.store.Entity;
 import com.massivecraft.massivecore.util.MUtil;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @EditorName("config")
@@ -22,51 +24,49 @@ public class SwordConfig extends Entity<SwordConfig> {
         return i;
     }
 
-
-    int baseCurrency = 3; //  amount of currency per cane broken
-
-    public Tier getFromId(String id) {
-        for (Tier tier : tiers) {
-            if (tier.getId().equalsIgnoreCase(id)) {
-                return tier;
-            }
-        }
-        return null;
+    public Tier getTierFromId(String id) {
+        return tiers.stream().filter(tier -> tier.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
     }
+
+    @AllArgsConstructor
+    private static class MobConfig {
+        public int baseCurrency;
+        public String treasureHunterLootTable;
+        public String extractLootTable;
+    }
+
+    Map<EntityType, MobConfig> perMobConfig = Map.of(
+            EntityType.BLAZE, new MobConfig(
+                    5,
+                    "fishing1",
+                    "fishing1"
+            ),
+            EntityType.SILVERFISH, new MobConfig(
+                    5,
+                    "fishing1",
+                    "fishing1"
+            )
+    );
+
 
     List<EntityType> mobWhitelist = List.of(
             EntityType.BLAZE,
             EntityType.SILVERFISH
     );
 
-
-    List<MobTypeLootTable> treasureHunterEntityLootTableList = MUtil.list(
-            new MobTypeLootTable(EntityType.BLAZE, "fishing1"),
-            new MobTypeLootTable(EntityType.SILVERFISH, "fishing1")
-    );
-
-    List<MobTypeLootTable> extractEntityLootTableList = MUtil.list(
-            new MobTypeLootTable(EntityType.BLAZE, "fishing1"),
-            new MobTypeLootTable(EntityType.SILVERFISH, "fishing1")
-    );
-
+    public int getBaseCurrencyForMobType(EntityType type) {
+        MobConfig cnf = perMobConfig.getOrDefault(type, null);
+        return cnf == null ? 0 : cnf.baseCurrency;
+    }
 
     public String getTreasureHunterLootTableFromMob(EntityType entityType) {
-        for (MobTypeLootTable mobTypeLootTable : treasureHunterEntityLootTableList) {
-            if (mobTypeLootTable.getEntity().equals(entityType)) {
-                return mobTypeLootTable.getLootTable();
-            }
-        }
-        return null;
+        MobConfig cnf = perMobConfig.getOrDefault(entityType, null);
+        return cnf == null ? null : cnf.treasureHunterLootTable;
     }
 
     public String getExtractLootTableFromMob(EntityType entityType) {
-        for (MobTypeLootTable mobTypeLootTable : extractEntityLootTableList) {
-            if (mobTypeLootTable.getEntity().equals(entityType)) {
-                return mobTypeLootTable.getLootTable();
-            }
-        }
-        return null;
+        MobConfig cnf = perMobConfig.getOrDefault(entityType, null);
+        return cnf == null ? null : cnf.extractLootTable;
     }
 
 

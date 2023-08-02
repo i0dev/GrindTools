@@ -20,6 +20,9 @@ public class CmdGrindTools extends GrindToolsCommand {
     public CmdGrindToolsFishingRegion cmdGrindToolsFishingRegion = new CmdGrindToolsFishingRegion();
     public CmdGrindToolsUpgrade cmdGrindToolsUpgrade = new CmdGrindToolsUpgrade();
     public CmdGrindToolsDebug cmdGrindToolsDebug = new CmdGrindToolsDebug();
+    public CmdFlux cmdFlux = new CmdFlux();
+    public CmdGrindToolsReplaceOre cmdGrindToolsReplaceOre = new CmdGrindToolsReplaceOre();
+    public CmdGrindToolsClearOre cmdGrindToolsClearOres = new CmdGrindToolsClearOre();
     public MassiveCommandVersion cmdFactionsVersion = new MassiveCommandVersion(GrindToolsPlugin.get()).setAliases("v", "version").addRequirements(RequirementHasPerm.get(Perm.VERSION));
 
     @Override

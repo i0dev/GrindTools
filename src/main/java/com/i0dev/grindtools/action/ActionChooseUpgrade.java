@@ -6,6 +6,8 @@ import com.i0dev.grindtools.entity.object.TechChipConfigEntry;
 import com.i0dev.grindtools.entity.object.TechChips;
 import com.i0dev.grindtools.entity.object.Tools;
 import com.i0dev.grindtools.util.GrindToolBuilder;
+import com.i0dev.grindtools.util.Pair;
+import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.chestgui.ChestAction;
 import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
@@ -35,19 +37,19 @@ public class ActionChooseUpgrade implements ChestAction {
         TechChipConfigEntry cnf = getCnf();
 
         if (cnf == null) {
-            player.sendMessage("Tech chip config entry for " + techChip.name() + " not found.");
+            Utils.msg(player, MLang.get().techChipDoesntExist);
             return false;
         }
 
         MPlayer mPlayer = MPlayer.get(player);
 
         if (mPlayer.getCurrency() < price) {
-            player.sendMessage("You don't have enough money to upgrade this tech chip.");
+            Utils.msg(player, MLang.get().notEnoughMoneyToUpgrade);
             return false;
         }
 
         if (currentLevel + 1 > cnf.getMaxLevel()) {
-            player.sendMessage("You have reached the maximum level for this tech chip.");
+            Utils.msg(player, MLang.get().maxTechChipLevel);
             return false;
         }
 
@@ -79,7 +81,10 @@ public class ActionChooseUpgrade implements ChestAction {
         tool.setItemMeta(meta);
 
         mPlayer.setCurrency(mPlayer.getCurrency() - price);
-        player.sendMessage("You have successfully upgraded your " + techChip.getId() + " chip to level " + (currentLevel + 1) + ".");
+        Utils.msg(player, MLang.get().upgradedTechChip,
+                new Pair<>("%techChip%", techChip.getId()),
+                new Pair<>("%level%", String.valueOf(currentLevel + 1))
+        );
 
         CmdGrindToolsUpgrade.get().execute(player, List.of());
 

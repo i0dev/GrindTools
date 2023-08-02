@@ -2,9 +2,12 @@ package com.i0dev.grindtools.cmd;
 
 import com.i0dev.grindtools.cmd.type.TypeTechChip;
 import com.i0dev.grindtools.entity.MConf;
+import com.i0dev.grindtools.entity.MLang;
 import com.i0dev.grindtools.entity.TechChipConfig;
 import com.i0dev.grindtools.entity.object.TechChipConfigEntry;
 import com.i0dev.grindtools.entity.object.TechChips;
+import com.i0dev.grindtools.util.Pair;
+import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.Visibility;
 import com.massivecraft.massivecore.command.type.primitive.TypeInteger;
@@ -34,12 +37,12 @@ public class CmdGrindToolsGiveTechChip extends GrindToolsCommand {
         TechChipConfigEntry techChipConfigEntry = cnf.getTechChipConfigById(chip.name());
 
         if (techChipConfigEntry == null) {
-            msg("Tech chip config entry for " + chip.name() + " not found.");
+            Utils.msg(sender, MLang.get().techChipDoesntExist);
             return;
         }
 
         if (level > techChipConfigEntry.getMaxLevel()) {
-            msg("You have reached the maximum level for this tech chip.");
+            Utils.msg(sender, MLang.get().techChipMaxLevel);
             return;
         }
 
@@ -48,7 +51,12 @@ public class CmdGrindToolsGiveTechChip extends GrindToolsCommand {
             player.getInventory().addItem(techChipItem);
         }
 
-        msg("Gave " + player.getName() + " " + amount + " " + chip.name() + " tech chip(s) of level " + level + ".");
+        Utils.msg(player, MLang.get().gaveTechChip,
+                new Pair<>("%techChip%", chip.name()),
+                new Pair<>("%level%", String.valueOf(level)),
+                new Pair<>("%amount%", String.valueOf(amount)),
+                new Pair<>("%player%", player.getName())
+        );
 
     }
 }

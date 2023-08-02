@@ -1,6 +1,5 @@
 package com.i0dev.grindtools.entity.object;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

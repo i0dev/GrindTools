@@ -21,7 +21,7 @@ public class HoeConfig extends Entity<HoeConfig> {
     }
 
 
-    int baseCurrency = 3; //  amount of currency per cane broken
+    int baseCurrency = 3; // default cane
 
     public Tier getFromId(String id) {
         for (Tier tier : tiers) {
