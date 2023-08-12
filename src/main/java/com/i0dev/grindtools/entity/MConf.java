@@ -1,9 +1,11 @@
 package com.i0dev.grindtools.entity;
 
+import com.i0dev.grindtools.entity.object.ItemConfig;
 import com.massivecraft.massivecore.command.editor.annotation.EditorName;
 import com.massivecraft.massivecore.store.Entity;
 import com.massivecraft.massivecore.util.MUtil;
 import lombok.Getter;
+import org.bukkit.Material;
 
 import java.util.List;
 

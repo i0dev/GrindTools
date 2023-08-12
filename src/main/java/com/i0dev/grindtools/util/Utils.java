@@ -2,8 +2,13 @@ package com.i0dev.grindtools.util;
 
 import com.i0dev.grindtools.entity.MLang;
 import com.i0dev.grindtools.entity.MPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.event.block.TNTPrimeEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,6 +26,7 @@ public class Utils {
         recipient.msg(prefixAndColor(message, pairs));
     }
 
+    @SafeVarargs
     public static String prefixAndColor(String message, Pair<String, String>... pairs) {
         return color(pair(message.replace("%prefix%", MLang.get().prefix), pairs));
     }
@@ -58,6 +64,27 @@ public class Utils {
             msg = msg.replace(pair.getKey(), pair.getValue());
         }
         return msg;
+    }
+
+    /**
+     * Run a list of commands as console
+     *
+     * @param commands list of commands
+     * @param player   player to replace %player% with
+     */
+    public static void runCommands(List<String> commands, Player player) {
+        commands.forEach(command -> runCommand(command, player));
+    }
+
+    /**
+     * Run a command as console
+     *
+     * @param command command to run
+     * @param player  player to replace %player% with
+     */
+    public static void runCommand(String command, Player player) {
+        command = command.replace("%player%", player == null ? "unknown" : player.getName());
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
 
 }

@@ -1,10 +1,13 @@
 package com.i0dev.grindtools.util;
 
+import com.i0dev.grindtools.entity.ExtractShopConf;
 import com.i0dev.grindtools.entity.object.AdvancedItemConfig;
+import com.i0dev.grindtools.entity.object.ExtractShopItem;
 import com.i0dev.grindtools.entity.object.LootTable;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.NavigableMap;
 import java.util.Random;
 import java.util.TreeMap;
@@ -44,5 +47,17 @@ public class RandomCollection<E> {
 
         return rc;
     }
+
+    public static RandomCollection<ExtractShopItem> buildFromExtractShopConfig(List<ExtractShopItem> pool) {
+        RandomCollection<ExtractShopItem> rc = new RandomCollection<>();
+
+        pool.forEach(extractShopItem -> {
+            int weight = extractShopItem.getWeight();
+            rc.add(weight, extractShopItem);
+        });
+
+        return rc;
+    }
+
 
 }

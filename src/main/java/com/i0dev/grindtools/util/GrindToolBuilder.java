@@ -23,18 +23,24 @@ public class GrindToolBuilder {
         return applyTier(new ItemBuilder(tier.getMaterial()).name(tier.getDisplayName()), tier, type);
     }
 
-    public static ItemStack applyTier(ItemStack item, Tier tier, Tools type) {
+    public static void hideAllAttributes(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        meta.addItemFlags(ItemFlag.HIDE_DYE);
+        meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        item.setItemMeta(meta);
+    }
 
+    public static ItemStack applyTier(ItemStack item, Tier tier, Tools type) {
+        hideAllAttributes(item);
         ItemMeta meta1 = item.getItemMeta();
         meta1.setDisplayName(Utils.color(tier.getDisplayName()));
-        meta1.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta1.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
-        meta1.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        meta1.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        meta1.addItemFlags(ItemFlag.HIDE_DYE);
-        meta1.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        meta1.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        meta1.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta1.setUnbreakable(true);
         item.setItemMeta(meta1);
 
@@ -88,20 +94,23 @@ public class GrindToolBuilder {
 
         Tools type = Tools.valueOf(pdc.get(getKey("tool-type"), PersistentDataType.STRING));
 
-        switch (type) {
-            case HOE ->
-                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", HoeConfig.get().getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
-            case PICKAXE ->
-                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", PickaxeConfig.get().getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
-            case ROD ->
-                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", RodConfig.get().getFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
-            case SWORD ->
-                    newLore.replaceAll(s -> Utils.color(s.replace("%description%", SwordConfig.get().getTierFromId(pdc.get(getKey("tier"), PersistentDataType.STRING)).getDescription())));
+        List<String> descriptionReplacedLore = new ArrayList<>();
+        String tier = pdc.get(getKey("tier"), PersistentDataType.STRING);
+        for (String s : newLore) {
+            if (s.contains("%description%")) {
+                List<String> description = new ArrayList<>();
+                switch (type) {
+                    case HOE -> description = HoeConfig.get().getFromId(tier).getDescription();
+                    case PICKAXE -> description = PickaxeConfig.get().getFromId(tier).getDescription();
+                    case ROD -> description = RodConfig.get().getFromId(tier).getDescription();
+                    case SWORD -> description = SwordConfig.get().getTierFromId(tier).getDescription();
+                }
+                description.forEach(line -> descriptionReplacedLore.add(Utils.color(line)));
+            } else descriptionReplacedLore.add(s);
         }
-
+        newLore = descriptionReplacedLore;
 
         TechChipConfig cnf = TechChipConfig.get();
-
 
         double tokenBoost = Math.round((getCurrencyModifier(item)) * 1000.0) / 1000.0;
         double expBoost = Math.round(getExpModifier(item) * 100.0) / 100.0;

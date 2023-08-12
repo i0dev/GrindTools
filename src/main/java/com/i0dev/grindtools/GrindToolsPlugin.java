@@ -53,7 +53,10 @@ public class GrindToolsPlugin extends MassivePlugin {
                 TechChipConfigColl.class,
                 UpgradeConfigColl.class,
                 OreConfigColl.class,
-                OreDataColl.class
+                OreDataColl.class,
+                ExtractShopConfColl.class,
+                ExtractShopDataColl.class,
+                FluxConfColl.class
         );
     }
 

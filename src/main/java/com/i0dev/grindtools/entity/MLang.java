@@ -28,6 +28,8 @@ public class MLang extends Entity<MLang> {
     String amountMustBe = "%prefix% &cAmount must be less than or equal to &f%amount%&c.";
     String removedFlux = "%prefix% &aRemoved &f%amount% &aflux from &f%player%.";
     String setFlux = "%prefix% &aSet &f%player%'s &aflux to &f%amount%.";
+    String notEnoughFluxBalance = "%prefix% you don't have enough flux.";
+    String boughtFluxItem = "%prefix% &aYou bought %item% for &f%price% &aflux.";
 
     // GrindTools
     String makeSelectionWithWorldEdit = "%prefix% &cMake a selection with WorldEdit.";
@@ -79,6 +81,12 @@ public class MLang extends Entity<MLang> {
     String canOnlyApplyTierUpgradeTo = "%prefix% &cYou can only apply this tier upgrade to %tools%.";
     String toolAlreadyMaxTier = "%prefix% &cThis tool is already at max tier.";
     String appliedToolUpgrade = "%prefix% &aApplied tier upgrade &f%tier% &ato your tool.";
+
+    // Extract shop
+    String extractShopRefreshedAnnouncement = "%prefix% &aExtract shop has been refreshed.";
+    String notEnoughExtractBalance = "%prefix% &cYou don't have enough extract points in your inventory to buy this.";
+    String reachedExtractBalanceLimit = "%prefix% &cYou have reached the extract balance limit.";
+    String boughtExtractItem = "%prefix% &aBought &a%item% with your extract points.";
 
 
     @Override

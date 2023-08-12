@@ -9,24 +9,73 @@ description: ${project.description}
 api-version: 1.20
 permissions:
   grindtools.basecommand: { description: grindtools basecommand, default: false }
-  grindtools.fishing.region.create: { description: create fishing region, default: false }
-  grindtools.fishing.region.remove: { description: delete fishing region, default: false }
-  grindtools.fishing.region.list: { description: list fishing region, default: false }
-  grindtools.fishing.region.teleport: { description: teleport to fishing region, default: false }
-  grindtools.give: { description: give item, default: false }
+  grindtools.debug: { description: debug, default: false }
+  grindtools.extract: { description: extract, default: false }
+  grindtools.extract.shop: { description: extract shop, default: false }
+  grindtools.extract.refreshshop: { description: extract refreshshop, default: false }
+  grindtools.flux: { description: flux, default: false }
+  grindtools.flux.set: { description: flux set, default: false }
+  grindtools.flux.add: { description: flux add, default: false }
+  grindtools.flux.pay: { description: flux pay, default: false }
+  grindtools.flux.shop: { description: flux shop, default: false }
+  grindtools.flux.remove: { description: flux remove, default: false }
+  grindtools.flux.balance: { description: flux balance, default: false }
+  grindtools.flux.balance.others: { description: flux balance others, default: false }
+  grindtools.replaceore: { description: replaceore, default: false }
+  grindtools.clearore: { description: clearore, default: false }
+  grindtools.fishingregion: { description: fishingregion, default: false }
+  grindtools.fishingregion.create: { description: fishingregion create, default: false }
+  grindtools.fishingregion.remove: { description: fishingregion remove, default: false }
+  grindtools.fishingregion.list: { description: fishingregion list, default: false }
+  grindtools.fishingregion.teleport: { description: fishingregion teleport, default: false }
+  grindtools.give: { description: give, default: false }
   grindtools.give.tool: { description: give tool, default: false }
-  grindtools.give.techchip: { description: give upgrade, default: false }
+  grindtools.give.techchip: { description: give techchip, default: false }
   grindtools.give.upgrade: { description: give upgrade, default: false }
-  grindtools.give.upgrade.any: { description: give upgrade, default: false }
-  grindtools.give.upgrade.next: { description: give upgrade, default: false }
-  grindtools.upgrade: { description: upgrade item, default: false }
+  grindtools.give.upgrade.any: { description: give upgrade any, default: false }
+  grindtools.give.upgrade.next: { description: give upgrade next, default: false }
+  grindtools.upgrade: { description: upgrade, default: false }
   grindtools.version: { description: check version, default: false }
+  grindtools.flux.*:
+    grindtools.flux.set: true
+    grindtools.flux.add: true
+    grindtools.flux.pay: true
+    grindtools.flux.shop: true
+    grindtools.flux.remove: true
+    grindtools.flux.balance: true
+    grindtools.flux.balance.others: true
+  grindtools.give.*:
+    grindtools.give.tool: true
+    grindtools.give.techchip: true
+    grindtools.give.upgrade: true
+    grindtools.give.upgrade.any: true
+    grindtools.give.upgrade.next: true
+  grindtools.fishingregion.*:
+    grindtools.fishingregion.create: true
+    grindtools.fishingregion.remove: true
+    grindtools.fishingregion.list: true
+    grindtools.fishingregion.teleport: true
   grindtools.*:
     grindtools.basecommand: true
-    grindtools.fishing.region.create: true
-    grindtools.fishing.region.remove: true
-    grindtools.fishing.region.list: true
-    grindtools.fishing.region.teleport: true
+    grindtools.debug: true
+    grindtools.extract: true
+    grindtools.extract.shop: true
+    grindtools.extract.refreshshop: true
+    grindtools.flux: true
+    grindtools.flux.set: true
+    grindtools.flux.add: true
+    grindtools.flux.pay: true
+    grindtools.flux.shop: true
+    grindtools.flux.remove: true
+    grindtools.flux.balance: true
+    grindtools.flux.balance.others: true
+    grindtools.replaceore: true
+    grindtools.clearore: true
+    grindtools.fishingregion: true
+    grindtools.fishingregion.create: true
+    grindtools.fishingregion.remove: true
+    grindtools.fishingregion.list: true
+    grindtools.fishingregion.teleport: true
     grindtools.give: true
     grindtools.give.tool: true
     grindtools.give.techchip: true
@@ -35,16 +84,3 @@ permissions:
     grindtools.give.upgrade.next: true
     grindtools.upgrade: true
     grindtools.version: true
-  grindtools.kit.op:
-    default: op
-    children:
-      grindtools.*: true
-  grindtools.kit.rank0:
-    default: false
-    children:
-      grindtools.basecommand: true
-      grindtools.upgrade: true
-  grindtools.kit.default:
-    default: true
-    children:
-      grindtools.kit.rank0: true

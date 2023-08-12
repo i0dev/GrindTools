@@ -34,15 +34,8 @@ public class TierUpgradeNext {
                 .addGlow(glow);
 
 
-        ItemMeta meta = item.getItemMeta();
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        meta.addItemFlags(ItemFlag.HIDE_DYE);
-        item.setItemMeta(meta);
+        GrindToolBuilder.hideAllAttributes(item);
+
 
         GrindToolBuilder.applyTag(item, "tier-upgrade-item-next", UUID.randomUUID().toString());
         GrindToolBuilder.applyTag(item, "tier-upgrade-next-" + id, "true");

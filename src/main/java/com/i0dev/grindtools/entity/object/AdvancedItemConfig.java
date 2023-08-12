@@ -15,6 +15,7 @@ public class AdvancedItemConfig extends ItemConfig {
     int maxAmount;
     List<String> commands;
     boolean dropItemStack;
+    String extractId = null;
 
     public AdvancedItemConfig(Material material, String displayName, List<String> lore, boolean glow, int weight, int minAmount, int maxAmount, boolean dropItemStack, List<String> commands) {
         super(material, displayName, lore, glow);
@@ -29,11 +30,14 @@ public class AdvancedItemConfig extends ItemConfig {
     public ItemStack getItemStack() {
         int amount = (int) (Math.random() * (maxAmount - minAmount) + minAmount);
 
-        return new ItemBuilder(material)
+        ItemBuilder builder = new ItemBuilder(material)
                 .amount(amount)
                 .name(displayName)
                 .setLore(lore)
                 .addGlow(glow);
+
+        if (extractId != null) builder.addPDCValue("extract-id", extractId);
+        return builder;
     }
 
 

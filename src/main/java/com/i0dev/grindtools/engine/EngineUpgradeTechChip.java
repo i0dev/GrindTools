@@ -28,7 +28,7 @@ public class EngineUpgradeTechChip extends Engine {
         return i;
     }
 
-    private ChestGui getBasicChestGui(String title, int size) {
+    public ChestGui getBasicChestGui(String title, int size) {
         Inventory inventory = Bukkit.createInventory(null, size, Txt.parse(title));
         ChestGui chestGui = ChestGui.getCreative(inventory);
 

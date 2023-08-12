@@ -1,5 +1,6 @@
 package com.i0dev.grindtools.cmd;
 
+import com.i0dev.grindtools.Perm;
 import com.i0dev.grindtools.entity.MLang;
 import com.i0dev.grindtools.entity.MPlayer;
 import com.i0dev.grindtools.util.Pair;
@@ -16,6 +17,11 @@ public class CmdFluxSet extends GrindToolsCommand {
         this.addParameter(TypePlayer.get(), "player");
         this.addParameter(TypeInteger.get(), "amount");
         this.setVisibility(Visibility.SECRET);
+    }
+
+    @Override
+    protected <T extends Enum<T>> T calcPerm() {
+        return (T) Perm.FLUX_SET;
     }
 
     @Override

@@ -6,39 +6,45 @@ import org.bukkit.permissions.Permissible;
 
 public enum Perm implements Identified {
 
-    BASECOMMAND,
+    BASECOMMAND("basecommand"),
 
-    DEBUG,
+    DEBUG("debug"),
 
-    SET,
-    ADD,
-    PAY,
-    REMOVE,
-    BALANCE,
-    BALANCE_OTHERS,
+    EXTRACT("extract"),
+    EXTRACT_SHOP("extract.shop"),
+    EXTRACT_REFRESHSHOP("extract.refreshshop"),
 
-    REPLACE_ORE,
-    CLEAR_ORE,
+    FLUX("flux"),
+    FLUX_SET("flux.set"),
+    FLUX_ADD("flux.add"),
+    FLUX_PAY("flux.pay"),
+    FLUX_SHOP("flux.shop"),
+    FLUX_REMOVE("flux.remove"),
+    FLUX_BALANCE("flux.balance"),
+    FLUX_BALANCE_OTHERS("flux.balance.others"),
 
-    FISHING_REGION,
-    FISHING_REGION_CREATE,
-    FISHING_REGION_REMOVE,
-    FISHING_REGION_LIST,
-    FISHING_REGION_TELEPORT,
-    GIVE,
-    GIVE_TOOL,
-    GIVE_TECH_CHIP,
-    GIVE_UPGRADE,
-    GIVE_UPGRADE_ANY,
-    GIVE_UPGRADE_NEXT,
-    UPGRADE,
+    REPLACE_ORE("replaceore"),
+    CLEAR_ORE("clearore"),
 
-    VERSION;
+    FISHING_REGION("fishingregion"),
+    FISHING_REGION_CREATE("fishingregion.create"),
+    FISHING_REGION_REMOVE("fishingregion.remove"),
+    FISHING_REGION_LIST("fishingregion.list"),
+    FISHING_REGION_TELEPORT("fishingregion.teleport"),
+    GIVE("give"),
+    GIVE_TOOL("give.tool"),
+    GIVE_TECHCHIP("give.techchip"),
+    GIVE_UPGRADE("give.upgrade"),
+    GIVE_UPGRADE_ANY("give.upgrade.any"),
+    GIVE_UPGRADE_NEXT("give.upgrade.next"),
+    UPGRADE("upgrade"),
+
+    VERSION("version");
 
     private final String id;
 
-    Perm() {
-        this.id = PermissionUtil.createPermissionId(GrindToolsPlugin.get(), this);
+    Perm(String id) {
+        this.id = "grindtools." + id;
     }
 
     @Override
