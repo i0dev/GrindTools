@@ -2,17 +2,21 @@ package com.i0dev.grindtools.engine;
 
 import com.i0dev.grindtools.entity.MLang;
 import com.i0dev.grindtools.util.GrindToolBuilder;
+import com.i0dev.grindtools.util.ItemBuilder;
 import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.Engine;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,6 +61,15 @@ public class EngineOther extends Engine {
     }
 
 
+    @EventHandler
+    public void onCraft(PrepareItemCraftEvent e) {
+        boolean hasGrindToolInCraftingMatrix = Arrays.stream(e.getInventory().getMatrix()).anyMatch(itemStack -> ItemBuilder.getPDCValue(itemStack, "tool-type") != null);
+        if (hasGrindToolInCraftingMatrix) {
+            Utils.msg(e.getView().getPlayer(), MLang.get().cantCraftGrindTool);
+            e.getInventory().setResult(null);
+        }
+    }
+
 
     public void givePlayerItem(Player player, ItemStack item) {
         HashMap<Integer, ItemStack> toDrop = player.getInventory().addItem(item);
@@ -69,5 +82,6 @@ public class EngineOther extends Engine {
             Utils.msg(player, MLang.get().inventoryFull);
         }
     }
+
 
 }

@@ -22,7 +22,7 @@ public class ItemConfig {
         return new ItemBuilder(material)
                 .name(displayName)
                 .addGlow(glow)
-                .lore(lore);
+                .putLore(lore);
     }
 
 }

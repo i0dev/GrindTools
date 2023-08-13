@@ -30,7 +30,7 @@ public class TechChipConfigEntry {
     public ItemStack getItemStack(String id, int level) {
         ItemStack item = new ItemBuilder(material)
                 .name(displayName.replace("%level%", String.valueOf(level)))
-                .lore(itemLore(TechChipConfig.get().getItemStackLore()))
+                .putLore(itemLore(TechChipConfig.get().getItemStackLore()))
                 .addGlow(glow);
 
         GrindToolBuilder.hideAllAttributes(item);
@@ -56,7 +56,7 @@ public class TechChipConfigEntry {
         return new ItemBuilder(material)
                 .amount((level == 0 || level == -99) ? 1 : level)
                 .name(displayName.replace("%level%", String.valueOf(level)))
-                .lore(lore)
+                .putLore(lore)
                 .addGlow(glow);
     }
 

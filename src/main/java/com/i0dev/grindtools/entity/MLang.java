@@ -53,6 +53,7 @@ public class MLang extends Entity<MLang> {
     // Tool
     String tierDoesntExist = "%prefix% &cTier with that name doesn't exist.";
     String gaveTool = "%prefix% &aGave &f%player% a &f%tier% &afor %tool%.";
+    String cantCraftGrindTool = "&cYou can't craft with Grind Tools in the crafting matrix.";
 
     // Upgrade
     String upgradeDoesntExist = "%prefix% &cUpgrade with that name doesn't exist.";

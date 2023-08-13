@@ -42,7 +42,7 @@ public class EngineUpgradeTechChip extends Engine {
         IntStream.range(0, chestGui.getInventory().getSize()).forEach(i -> chestGui.getInventory().setItem(i, new ItemBuilder(cnf.borderMaterial)
                 .amount(1)
                 .name(cnf.borderName)
-                .lore(cnf.borderLore)
+                .putLore(cnf.borderLore)
                 .addGlow(cnf.borderGlow)
         ));
 

@@ -50,7 +50,7 @@ public class ExtractShopItem {
                 newLore.add(line);
             }
         }
-        itemBuilder.lore(newLore);
+        itemBuilder.putLore(newLore);
         GrindToolBuilder.hideAllAttributes(itemBuilder);
         return itemBuilder;
     }

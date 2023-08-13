@@ -74,26 +74,6 @@ public class ItemBuilder extends ItemStack {
         return this;
     }
 
-    /**
-     * Adds a new list to the lore of the {@link ItemStack}
-     *
-     * @param text the new line to add
-     * @return this builder for chaining
-     * @since 1.0
-     */
-    public ItemBuilder setLore(final List<String> text) {
-        final ItemMeta meta = getItemMeta();
-        List<String> lore = meta.getLore();
-        if (lore == null) {
-            lore = new ArrayList<>();
-        }
-        for (String s : text) {
-            lore.add(Utils.color(s));
-        }
-        meta.setLore(lore);
-        setItemMeta(meta);
-        return this;
-    }
 
     /**
      * Adds a new line to the lore of the {@link ItemStack}
@@ -121,7 +101,7 @@ public class ItemBuilder extends ItemStack {
      * @return this builder for chaining
      * @since 1.0
      */
-    public ItemBuilder lore(final List<String> texts) {
+    public ItemBuilder putLore(List<String> texts) {
         final ItemMeta meta = getItemMeta();
         List<String> lore = meta.getLore();
         if (lore == null) {

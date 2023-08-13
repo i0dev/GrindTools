@@ -35,7 +35,7 @@ public class TierUpgrade {
     public ItemStack getItemStack() {
         ItemStack item = new ItemBuilder(material)
                 .name(displayName)
-                .lore(itemLore(lore))
+                .putLore(itemLore(lore))
                 .addGlow(glow);
 
         GrindToolBuilder.hideAllAttributes(item);

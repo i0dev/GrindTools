@@ -33,7 +33,7 @@ public class AdvancedItemConfig extends ItemConfig {
         ItemBuilder builder = new ItemBuilder(material)
                 .amount(amount)
                 .name(displayName)
-                .setLore(lore)
+                .putLore(lore)
                 .addGlow(glow);
 
         if (extractId != null) builder.addPDCValue("extract-id", extractId);

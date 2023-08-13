@@ -30,7 +30,7 @@ public class TierUpgradeNext {
     public ItemStack getItemStack() {
         ItemStack item = new ItemBuilder(material)
                 .name(displayName)
-                .lore(itemLore(lore))
+                .putLore(itemLore(lore))
                 .addGlow(glow);
 
 

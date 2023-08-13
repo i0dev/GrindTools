@@ -38,7 +38,7 @@ public class FluxShopItem {
         for (String line : lore) {
             newLore.add(line.replace("%cost%", String.valueOf(price)));
         }
-        itemBuilder.lore(newLore);
+        itemBuilder.putLore(newLore);
         GrindToolBuilder.hideAllAttributes(itemBuilder);
         return itemBuilder;
     }
