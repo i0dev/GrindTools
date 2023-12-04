@@ -24,9 +24,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class EnginePickaxe extends Engine {
 
@@ -159,8 +157,13 @@ public class EnginePickaxe extends Engine {
                 for (ItemStack drop : drops) {
                     double moneyToGive = GrindToolBuilder.getPrice(drop);
 
-                    GrindToolBuilder.givePlayerMoney(player, moneyToGive);
-                    player.sendMessage("You sold " + drop.getAmount() + " " + drop.getType().name() + " for $" + moneyToGive);
+                    // If it has been more than 10 seconds since the last time the player was given money, give the player money && send action bar message
+                    if (!lastTimeMoneySent.containsKey(player.getUniqueId()) || System.currentTimeMillis() - lastTimeMoneySent.get(player.getUniqueId()) > seconds * 1000) {
+                        lastTimeMoneySent.put(player.getUniqueId(), System.currentTimeMillis());
+                        Utils.sendActionBarMessage(player, MLang.get().autoSellActionBarMessage
+                                .replace("%amount%", String.valueOf(drop.getAmount()))
+                                .replace("%price%", String.valueOf(moneyToGive)));
+                    }
                 }
             } else {
                 drops.forEach(drop -> EngineOther.get().givePlayerItem(player, drop));
@@ -183,6 +186,8 @@ public class EnginePickaxe extends Engine {
         e.getBlock().setType(ore.getRegeneratingBlockType());
     }
 
-
+    // Map to send money every X seconds
+    int seconds = 10;
+    Map<UUID, Long> lastTimeMoneySent = new HashMap<>();
 
 }

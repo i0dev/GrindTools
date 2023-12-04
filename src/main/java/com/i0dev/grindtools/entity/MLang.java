@@ -69,6 +69,8 @@ public class MLang extends Entity<MLang> {
     String youFoundATreasure = "%prefix% &aYou found a treasure!";
     String youExtractedSpecialItem = "%prefix% &aYou extracted a special item!";
     String inventoryFull = "%prefix% &cYour inventory is full. Dropping items on the ground.";
+    String inventoryFullTitle = "&cInventory Full";
+    String inventoryFullSubtitle = "&cYour inventory is full. Dropping items on the ground.";
     String needGrindPickToMine = "%prefix% &cYou need a grind pickaxe to mine this block.";
     String canOnlyUseGrindPickOnGrindOres = "%prefix% &cYou can only use a grind pickaxe on grind ores.";
     String blockRegenerating = "%prefix% &aBlock is regenerating... please wait.";
@@ -82,6 +84,7 @@ public class MLang extends Entity<MLang> {
     String canOnlyApplyTierUpgradeTo = "%prefix% &cYou can only apply this tier upgrade to %tools%.";
     String toolAlreadyMaxTier = "%prefix% &cThis tool is already at max tier.";
     String appliedToolUpgrade = "%prefix% &aApplied tier upgrade &f%tier% &ato your tool.";
+    String autoSellActionBarMessage = "&a&lAutoSell: &f%amount% &aitems sold for &f%price%&a.";
 
     // Extract shop
     String extractShopRefreshedAnnouncement = "%prefix% &aExtract shop has been refreshed.";

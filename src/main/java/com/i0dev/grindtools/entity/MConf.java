@@ -6,6 +6,7 @@ import com.massivecraft.massivecore.store.Entity;
 import com.massivecraft.massivecore.util.MUtil;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 
 import java.util.List;
 
@@ -30,6 +31,12 @@ public class MConf extends Entity<MConf> {
     String modifierFormatLure = "&7- &6Lure &7(%amount%s avg catch time)";
     String modifierFormatDamage = "&7- &6Damage &7(+%amount%)";
     String modifierFormatEfficiency = "&7- &6Efficiency &7(+%amount%)";
+
+    // Inventory Full Title Settings
+    int inventoryFullTitleFadeIn = 10;
+    int inventoryFullTitleStay = 40;
+    int inventoryFullTitleFadeOut = 10;
+    Sound inventoryFullSound = Sound.BLOCK_NOTE_BLOCK_CHIME;
 
     @Override
     public MConf load(MConf that) {

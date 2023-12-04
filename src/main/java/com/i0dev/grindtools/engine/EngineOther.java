@@ -1,5 +1,6 @@
 package com.i0dev.grindtools.engine;
 
+import com.i0dev.grindtools.entity.MConf;
 import com.i0dev.grindtools.entity.MLang;
 import com.i0dev.grindtools.util.GrindToolBuilder;
 import com.i0dev.grindtools.util.ItemBuilder;
@@ -15,10 +16,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class EngineOther extends Engine {
 
@@ -70,6 +68,9 @@ public class EngineOther extends Engine {
         }
     }
 
+    // Make it so it only notifies every 5 seconds
+    HashMap<UUID, Long> playerChatCooldownMap = new HashMap<>();
+
 
     public void givePlayerItem(Player player, ItemStack item) {
         HashMap<Integer, ItemStack> toDrop = player.getInventory().addItem(item);
@@ -79,7 +80,29 @@ public class EngineOther extends Engine {
             for (ItemStack itemStack : toDrop.values()) {
                 player.getWorld().dropItem(player.getLocation(), itemStack);
             }
+
+            if (playerChatCooldownMap.containsKey(player.getUniqueId())) {
+                // If it has not been 5 seconds, just return
+                if (System.currentTimeMillis() - playerChatCooldownMap.get(player.getUniqueId()) < 5000) return;
+
+                // If its been 5 seconds, remove the player from the map and continue
+                playerChatCooldownMap.remove(player.getUniqueId());
+            }
+
+            // Send chat message
             Utils.msg(player, MLang.get().inventoryFull);
+
+            // Send Title
+            Utils.sendTitleToPlayer(player, Utils.color(MLang.get().inventoryFullTitle), Utils.color(MLang.get().inventoryFullSubtitle),
+                    MConf.get().getInventoryFullTitleFadeIn(),
+                    MConf.get().getInventoryFullTitleStay(),
+                    MConf.get().getInventoryFullTitleFadeOut());
+
+            // Play sound
+            player.playSound(player.getLocation(), MConf.get().getInventoryFullSound(), 1, 1);
+
+            // Add player to map
+            playerChatCooldownMap.put(player.getUniqueId(), System.currentTimeMillis());
         }
     }
 

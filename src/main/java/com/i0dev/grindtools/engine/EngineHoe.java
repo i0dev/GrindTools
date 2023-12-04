@@ -8,6 +8,9 @@ import com.i0dev.grindtools.util.ItemBuilder;
 import com.i0dev.grindtools.util.RandomCollection;
 import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.Engine;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,8 +19,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class EngineHoe extends Engine {
 
@@ -93,16 +95,58 @@ public class EngineHoe extends Engine {
         MPlayer mPlayer = MPlayerColl.get().get(player);
         mPlayer.setCurrency(mPlayer.getCurrency() + currencyToGive);
 
-        // if autosell is enabled, sell the cane
+        // if auto sell is enabled, sell the cane
         if (GrindToolBuilder.isAutoSell(tool)) {
             double moneyToGive = GrindToolBuilder.getPrice(new ItemBuilder(Material.SUGAR_CANE).amount(caneBlocksBroken));
-
             GrindToolBuilder.givePlayerMoney(player, moneyToGive);
-        } else {        // else directly give the player the cane
+
+            // If it has been more than 10 seconds since the last time the player was given money, give the player money and send action bar message
+            ActionBarMessage actionBarMessage = ActionBarMessage.getActionBarMessage(player.getUniqueId());
+            if (actionBarMessage != null) {
+                // if it has been more than 10 seconds, send the message and update the time
+                if (System.currentTimeMillis() - actionBarMessage.getTime() > seconds * 1000L) {
+                    actionBarMessage.setTime(System.currentTimeMillis());
+                    actionBarMessage.addAmount(caneBlocksBroken);
+                    Utils.sendActionBarMessage(player, MLang.get().autoSellActionBarMessage
+                            .replace("%amount%", String.valueOf(actionBarMessage.getAmount()))
+                            .replace("%price%", String.valueOf(moneyToGive)));
+                    actionBarLastMessageList.remove(actionBarMessage);
+                } else {
+                    // if it has not been more than 10 seconds, just update the amount
+                    actionBarMessage.addAmount(caneBlocksBroken);
+                }
+            } else {
+                // if the player does not have an action bar message, create one
+                actionBarMessage = new ActionBarMessage(player.getUniqueId(), System.currentTimeMillis(), caneBlocksBroken);
+                actionBarLastMessageList.add(actionBarMessage);
+            }
+
+        } else {
+            // else directly give the player the cane
             EngineOther.get().givePlayerItem(player, new ItemStack(Material.SUGAR_CANE, caneBlocksBroken));
         }
     }
 
+    // Map to send money every X seconds
+    int seconds = 10;
+    public static List<ActionBarMessage> actionBarLastMessageList = new ArrayList<>();
+
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    public static class ActionBarMessage {
+        private UUID player;
+        private long time;
+        private int amount;
+
+        public void addAmount(int amount) {
+            this.amount += amount;
+        }
+
+        public static ActionBarMessage getActionBarMessage(UUID player) {
+            return actionBarLastMessageList.stream().filter(actionBarMessage -> actionBarMessage.getPlayer().equals(player)).findFirst().orElse(null);
+        }
+    }
 
     // Calcualte how many blocks above the block that was broken are sugar cane blocks, stopping if it reaches a non-sugar cane block
     public List<Location> getSugarCaneBlocksAbove(Location location) {
@@ -113,8 +157,6 @@ public class EngineHoe extends Engine {
         }
         return caneBlocks;
     }
-
-
 
 
 }

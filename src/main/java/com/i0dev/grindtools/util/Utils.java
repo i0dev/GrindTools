@@ -2,6 +2,8 @@ package com.i0dev.grindtools.util;
 
 import com.i0dev.grindtools.entity.MLang;
 import com.i0dev.grindtools.entity.MPlayer;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -87,4 +89,28 @@ public class Utils {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
 
+
+    /**
+     * Sends a title and a subtitle to a player.
+     *
+     * @param player The player to send the title to.
+     * @param title The main title text.
+     * @param subtitle The subtitle text.
+     * @param fadeIn The time in ticks for the title to fade in.
+     * @param stay The time in ticks for the title to stay on the screen.
+     * @param fadeOut The time in ticks for the title to fade out.
+     */
+    public static void sendTitleToPlayer(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+    }
+
+    /**
+     * Sends an action bar message to a player.
+     *
+     * @param player The player to send the action bar message to.
+     * @param message The message text to be displayed in the action bar.
+     */
+    public static void sendActionBarMessage(Player player, String message) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(color(message)));
+    }
 }
