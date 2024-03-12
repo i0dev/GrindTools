@@ -33,7 +33,11 @@ public class OreConfig extends Entity<OreConfig> {
                     60000,
                     120000,
                     MUtil.list(
-                            new AdvancedItemConfig(Material.IRON_INGOT, "Iron Ingot", MUtil.list(), false, -1, 1, 3, true, MUtil.list())
+                            new AdvancedItemConfig(Material.IRON_INGOT, "Iron Ingot", MUtil.list(), false, -1, 1, 3, true, MUtil.list(),
+                                    MUtil.list(
+                                            "sell_shop_id:iron_ingot"
+                                    )
+                            )
                     ),
                     1,
                     "fishing1",

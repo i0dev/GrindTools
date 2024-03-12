@@ -3,6 +3,7 @@ package com.i0dev.grindtools.engine;
 import com.i0dev.grindtools.GrindToolsPlugin;
 import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.AdvancedItemConfig;
+import com.i0dev.grindtools.task.TaskSendHotbarMessage;
 import com.i0dev.grindtools.util.GrindToolBuilder;
 import com.i0dev.grindtools.util.ItemBuilder;
 import com.i0dev.grindtools.util.RandomCollection;
@@ -67,7 +68,6 @@ public class EngineHoe extends Engine {
 
 
         // -- TechChips  -- //
-
         double currencyBoost = GrindToolBuilder.getCurrencyModifier(tool) * HoeConfig.get().getBaseCurrency();
         double dropBoost = GrindToolBuilder.getDropModifier(tool);
         double treasureHunterPercent = GrindToolBuilder.getTreasureHunterPercent(tool);
@@ -90,61 +90,21 @@ public class EngineHoe extends Engine {
 
 
         // -- Handle giving items -- //
-
-
         MPlayer mPlayer = MPlayerColl.get().get(player);
         mPlayer.setCurrency(mPlayer.getCurrency() + currencyToGive);
+        // send action bar message for flux
+        TaskSendHotbarMessage.addAmountToActionBarMessage(player.getUniqueId(), TaskSendHotbarMessage.ActionBarType.FLUX, 0, currencyToGive);
 
         // if auto sell is enabled, sell the cane
         if (GrindToolBuilder.isAutoSell(tool)) {
             double moneyToGive = GrindToolBuilder.getPrice(new ItemBuilder(Material.SUGAR_CANE).amount(caneBlocksBroken));
             GrindToolBuilder.givePlayerMoney(player, moneyToGive);
 
-            // If it has been more than 10 seconds since the last time the player was given money, give the player money and send action bar message
-            ActionBarMessage actionBarMessage = ActionBarMessage.getActionBarMessage(player.getUniqueId());
-            if (actionBarMessage != null) {
-                // if it has been more than 10 seconds, send the message and update the time
-                if (System.currentTimeMillis() - actionBarMessage.getTime() > seconds * 1000L) {
-                    actionBarMessage.setTime(System.currentTimeMillis());
-                    actionBarMessage.addAmount(caneBlocksBroken);
-                    Utils.sendActionBarMessage(player, MLang.get().autoSellActionBarMessage
-                            .replace("%amount%", String.valueOf(actionBarMessage.getAmount()))
-                            .replace("%price%", String.valueOf(moneyToGive)));
-                    actionBarLastMessageList.remove(actionBarMessage);
-                } else {
-                    // if it has not been more than 10 seconds, just update the amount
-                    actionBarMessage.addAmount(caneBlocksBroken);
-                }
-            } else {
-                // if the player does not have an action bar message, create one
-                actionBarMessage = new ActionBarMessage(player.getUniqueId(), System.currentTimeMillis(), caneBlocksBroken);
-                actionBarLastMessageList.add(actionBarMessage);
-            }
-
+            // send action bar message for money
+            TaskSendHotbarMessage.addAmountToActionBarMessage(player.getUniqueId(), TaskSendHotbarMessage.ActionBarType.MONEY, caneBlocksBroken, (int) moneyToGive);
         } else {
             // else directly give the player the cane
             EngineOther.get().givePlayerItem(player, new ItemStack(Material.SUGAR_CANE, caneBlocksBroken));
-        }
-    }
-
-    // Map to send money every X seconds
-    int seconds = 10;
-    public static List<ActionBarMessage> actionBarLastMessageList = new ArrayList<>();
-
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    public static class ActionBarMessage {
-        private UUID player;
-        private long time;
-        private int amount;
-
-        public void addAmount(int amount) {
-            this.amount += amount;
-        }
-
-        public static ActionBarMessage getActionBarMessage(UUID player) {
-            return actionBarLastMessageList.stream().filter(actionBarMessage -> actionBarMessage.getPlayer().equals(player)).findFirst().orElse(null);
         }
     }
 

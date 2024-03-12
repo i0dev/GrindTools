@@ -16,6 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiConsumer;
 
 public class GrindToolBuilder {
 
@@ -47,6 +48,9 @@ public class GrindToolBuilder {
         item.setType(tier.getMaterial());
         if (tier.isGlow()) item.addUnsafeEnchantment(Glow.getGlow(), 1);
 
+        for (TechChips defaultTechChip : tier.getDefaultTechChips()) {
+            applyTag(item, "techchip-" + defaultTechChip.getId(), "0");
+        }
 
         applyTag(item, "tool-type", type.name());
 
@@ -124,10 +128,28 @@ public class GrindToolBuilder {
         List<String> techChipsToAdd = new ArrayList<>();
         List<String> modifiersToAdd = new ArrayList<>();
 
-        getAllTechChips(item).forEach((techChip, multiplierLevel) -> techChipsToAdd.add(Utils.color(MConf.get().getTechChipLoreFormat()
-                .replace("%chip%", techChip.getDisplayName())
-                .replace("%level%", multiplierLevel == null ? "1" : String.valueOf(multiplierLevel.getLevel()))
-        )));
+        getAllTechChips(item).forEach((techChip, multiplierLevel) -> {
+
+            String format;
+            switch (techChip) {
+                case AUTO_SELL -> format = MConf.get().getTechChipAutoSellFormat();
+                case SOULBOUND -> format = MConf.get().getTechChipSoulboundFormat();
+                case TREASURE_HUNTER -> format = MConf.get().getTechChipTreasureHunterFormat();
+                case DROP_BOOST -> format = MConf.get().getTechChipDropBoostFormat();
+                case TOKEN_BOOST -> format = MConf.get().getTechChipTokenBoostFormat();
+                case EXP_BOOST -> format = MConf.get().getTechChipExpBoostFormat();
+                case EXTRACT -> format = MConf.get().getTechChipExtractFormat();
+                case LURE -> format = MConf.get().getTechChipLureFormat();
+                case DAMAGE -> format = MConf.get().getTechChipDamageFormat();
+                case EFFICIENCY -> format = MConf.get().getTechChipEfficiencyFormat();
+                default -> format = "&cERROR: Unknown Tech Chip";
+            }
+
+
+            techChipsToAdd.add(Utils.color(format
+                    .replace("%level%", multiplierLevel == null ? "1" : String.valueOf(multiplierLevel.getLevel()))
+            ));
+        });
 
         if (tokenBoost != 0 && isAppliedToTool(type, cnf.token_boost)) {
             modifiersToAdd.add(Utils.color(MConf.get().getModifierFormatTokenBoost()
@@ -213,7 +235,8 @@ public class GrindToolBuilder {
             String name = namespacedKey.getKey().replace("techchip-", "");
             TechChips techChip = TechChips.valueOf(name.toUpperCase());
             int levelInt = Integer.parseInt(pdc.get(namespacedKey, PersistentDataType.STRING));
-            MultiplierLevel level = TechChipConfig.get().getTechChipConfigById(techChip.getId()).getLevels().stream().filter(lvl -> lvl.getLevel() == levelInt).findFirst().orElseGet(null);
+            MultiplierLevel level = TechChipConfig.get().getTechChipConfigById(techChip.getId()).getLevels().stream().filter(lvl -> lvl.getLevel() == levelInt).findFirst().orElse(null);
+            if (level == null) return;
             ret.put(techChip, level);
         });
         return ret;
@@ -344,8 +367,11 @@ public class GrindToolBuilder {
     public static int getEfficiencyLevel(ItemStack tool) {
         TechChipConfig cnf = TechChipConfig.get();
 
+        int baseEfficiencyLevel = PickaxeConfig.get().getStartingEfficencyMap().getOrDefault(getPDC(tool).get(getKey("tier"), PersistentDataType.STRING), 0);
+
         int efficiencyLevel = Integer.parseInt(getPDC(tool).getOrDefault(getKey("techchip-efficiency"), PersistentDataType.STRING, "0"));
-        return efficiencyLevel == 0 ? 0 : cnf.efficiency.getLevels().stream().filter(lvl -> lvl.getLevel() == efficiencyLevel).findFirst().orElseThrow().getLevel();
+        int finalEffLevel = efficiencyLevel == 0 ? 0 : cnf.efficiency.getLevels().stream().filter(lvl -> lvl.getLevel() == efficiencyLevel).findFirst().orElseThrow().getLevel();
+        return baseEfficiencyLevel + finalEffLevel;
     }
 
     public static boolean isAutoSell(ItemStack tool) {

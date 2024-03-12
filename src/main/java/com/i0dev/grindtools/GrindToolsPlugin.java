@@ -39,11 +39,18 @@ public class GrindToolsPlugin extends MassivePlugin {
     }
 
     @Override
+    public void onEnablePost() {
+        super.onEnablePost();
+        SellShop.example();
+    }
+
+    @Override
     public List<Class<?>> getClassesActiveColls() {
         return new MassiveList<>(
                 MConfColl.class,
                 MLangColl.class,
                 MPlayerColl.class,
+                SellShopColl.class,
 
                 HoeConfigColl.class,
                 LootTableConfColl.class,

@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.bukkit.Material;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @EditorName("config")
@@ -36,6 +37,23 @@ public class PickaxeConfig extends Entity<PickaxeConfig> {
             "%modifiers%"
     );
 
+    Map<String, Integer> miningFatigueMap = MUtil.map(
+            "rookie-pickaxe", 0,
+            "stone-pickaxe", 2,
+            "golden-pickaxe", 3,
+            "iron-pickaxe", 4,
+            "diamond-pickaxe", 5,
+            "netherite-pickaxe", 6
+    );
+
+    Map<String, Integer> startingEfficencyMap = MUtil.map(
+            "rookie-pickaxe", 1,
+            "stone-pickaxe", 2,
+            "golden-pickaxe", 3,
+            "iron-pickaxe", 4,
+            "diamond-pickaxe", 5,
+            "netherite-pickaxe", 6
+    );
 
     List<Tier> tiers = MUtil.list(
             new Tier(

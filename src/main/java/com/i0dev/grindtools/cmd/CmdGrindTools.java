@@ -24,6 +24,7 @@ public class CmdGrindTools extends GrindToolsCommand {
     public CmdGrindToolsReplaceOre cmdGrindToolsReplaceOre = new CmdGrindToolsReplaceOre();
     public CmdGrindToolsClearOre cmdGrindToolsClearOres = new CmdGrindToolsClearOre();
     public CmdExtract cmdExtract = new CmdExtract();
+    public CmdGrindToolsShop cmdGrindToolsShop = new CmdGrindToolsShop();
     public MassiveCommandVersion cmdFactionsVersion = new MassiveCommandVersion(GrindToolsPlugin.get()).setAliases("v", "version").addRequirements(RequirementHasPerm.get(Perm.VERSION));
 
     @Override

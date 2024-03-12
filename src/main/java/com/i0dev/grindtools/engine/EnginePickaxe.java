@@ -5,6 +5,7 @@ import com.i0dev.grindtools.entity.*;
 import com.i0dev.grindtools.entity.object.AdvancedItemConfig;
 import com.i0dev.grindtools.entity.object.Ore;
 import com.i0dev.grindtools.task.TaskRegenOre;
+import com.i0dev.grindtools.task.TaskSendHotbarMessage;
 import com.i0dev.grindtools.util.GrindToolBuilder;
 import com.i0dev.grindtools.util.RandomCollection;
 import com.i0dev.grindtools.util.Utils;
@@ -18,8 +19,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -47,8 +50,20 @@ public class EnginePickaxe extends Engine {
         if (tool.getItemMeta() == null) return;
         String toolTypeString = tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING);
         if (toolTypeString == null) return;
-        if (toolTypeString.equalsIgnoreCase("PICKAXE"))
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 1000000000, 0));
+        if (toolTypeString.equalsIgnoreCase("PICKAXE")) {
+            int miningFatigueLevel = PickaxeConfig.get().getMiningFatigueMap().getOrDefault(tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tier"), PersistentDataType.STRING), -1);
+            if (miningFatigueLevel != -1) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 1000000000, miningFatigueLevel));
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerDropItem(PlayerDropItemEvent e) {
+        Player player = e.getPlayer();
+        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
+            player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+        }
     }
 
 
@@ -116,8 +131,7 @@ public class EnginePickaxe extends Engine {
 
         e.setDropItems(false);
         e.setCancelled(true);
-
-        // TechChips //
+        // TechChips
 
         if (toolTypeString != null && toolTypeString.equalsIgnoreCase("PICKAXE")) {
             // Treasure Hunter
@@ -140,43 +154,33 @@ public class EnginePickaxe extends Engine {
             int currencyToGive = (int) Math.ceil(currencyBoost);
             MPlayer mPlayer = MPlayerColl.get().get(player);
             mPlayer.setCurrency(mPlayer.getCurrency() + currencyToGive);
-
-
-            List<ItemStack> drops = new ArrayList<>();
+            // send action bar message for flux
+            TaskSendHotbarMessage.addAmountToActionBarMessage(player.getUniqueId(), TaskSendHotbarMessage.ActionBarType.MONEY, 0, currencyToGive);
 
             // drops
             double dropBoost = GrindToolBuilder.getDropModifier(tool);
-            ore.getDrops().forEach(itemConfig -> {
-                ItemStack itemStack = itemConfig.getItemStack();
-                itemStack.setAmount((int) Math.ceil(itemStack.getAmount() * dropBoost));
-                drops.add(itemStack);
-            });
+            ItemStack drop = RandomCollection.buildFromAdvancedItemConfig(ore.getDrops()).next().getItemStack();
+            drop.setAmount((int) Math.ceil(drop.getAmount() * dropBoost));
 
             // if autosell is enabled, sell the item
             if (GrindToolBuilder.isAutoSell(tool)) {
-                for (ItemStack drop : drops) {
-                    double moneyToGive = GrindToolBuilder.getPrice(drop);
+                double moneyToGive = EngineSell.get().getAutoSellPrice(drop);
+                GrindToolBuilder.givePlayerMoney(player, moneyToGive);
 
-                    // If it has been more than 10 seconds since the last time the player was given money, give the player money && send action bar message
-                    if (!lastTimeMoneySent.containsKey(player.getUniqueId()) || System.currentTimeMillis() - lastTimeMoneySent.get(player.getUniqueId()) > seconds * 1000) {
-                        lastTimeMoneySent.put(player.getUniqueId(), System.currentTimeMillis());
-                        Utils.sendActionBarMessage(player, MLang.get().autoSellActionBarMessage
-                                .replace("%amount%", String.valueOf(drop.getAmount()))
-                                .replace("%price%", String.valueOf(moneyToGive)));
-                    }
-                }
-            } else {
-                drops.forEach(drop -> EngineOther.get().givePlayerItem(player, drop));
-            }
+                // send action bar message for money
+                TaskSendHotbarMessage.addAmountToActionBarMessage(player.getUniqueId(), TaskSendHotbarMessage.ActionBarType.MONEY, drop.getAmount(), (int) moneyToGive);
+
+            } else EngineOther.get().givePlayerItem(player, drop);
+
 
             // exp boost
             double expBoost = GrindToolBuilder.getExpModifier(tool);
-            double expToGive = expBoost * e.getExpToDrop();
-            ExperienceOrb orb = ((ExperienceOrb) e.getBlock().getLocation().getWorld().spawnEntity(e.getBlock().getLocation(), EntityType.EXPERIENCE_ORB));
-            orb.setExperience((int) Math.ceil(expToGive));
+            double expToGive = expBoost * ore.getExpToDrop();
+            // just give the player expToGive
+            player.giveExp((int) Math.ceil(expToGive));
         } else {
-            ExperienceOrb orb = ((ExperienceOrb) e.getBlock().getLocation().getWorld().spawnEntity(e.getBlock().getLocation(), EntityType.EXPERIENCE_ORB));
-            orb.setExperience(ore.getExpToDrop());
+            player.giveExp((int) Math.ceil(ore.getExpToDrop()));
+
             ore.getDrops().forEach(itemConfig -> {
                 ItemStack itemStack = itemConfig.getItemStack();
                 EngineOther.get().givePlayerItem(player, itemStack);
@@ -185,9 +189,5 @@ public class EnginePickaxe extends Engine {
 
         e.getBlock().setType(ore.getRegeneratingBlockType());
     }
-
-    // Map to send money every X seconds
-    int seconds = 10;
-    Map<UUID, Long> lastTimeMoneySent = new HashMap<>();
 
 }

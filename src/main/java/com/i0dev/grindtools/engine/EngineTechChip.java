@@ -36,7 +36,7 @@ public class EngineTechChip extends Engine {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         if (!e.getInventory().getType().equals(InventoryType.CRAFTING))
-            return; // For some reason this is the player inventory type, so change this in the future if it becomes an issue.
+            return; // For some reason, this is the player inventory type, so change this in the future if it becomes an issue.
         if (!e.getClick().isLeftClick()) return;
         if (e.getClick().isCreativeAction() && !e.getWhoClicked().isOp()) return;
         if (e.getHotbarButton() != -1) return;

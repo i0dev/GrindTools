@@ -84,13 +84,17 @@ public class MLang extends Entity<MLang> {
     String canOnlyApplyTierUpgradeTo = "%prefix% &cYou can only apply this tier upgrade to %tools%.";
     String toolAlreadyMaxTier = "%prefix% &cThis tool is already at max tier.";
     String appliedToolUpgrade = "%prefix% &aApplied tier upgrade &f%tier% &ato your tool.";
-    String autoSellActionBarMessage = "&a&lAutoSell: &f%amount% &aitems sold for &f%price%&a.";
+    String autoSellActionBarMessageFluxOnly = "x%flux% flux has been gained";
+    String autoSellActionBarMessageBoth = "&a&lAutoSell: &f%amount% &aitems sold for &f%money%&a. and %flux% has been gained";
 
     // Extract shop
     String extractShopRefreshedAnnouncement = "%prefix% &aExtract shop has been refreshed.";
     String notEnoughExtractBalance = "%prefix% &cYou don't have enough extract points in your inventory to buy this.";
     String reachedExtractBalanceLimit = "%prefix% &cYou have reached the extract balance limit.";
     String boughtExtractItem = "%prefix% &aBought &a%item% with your extract points.";
+
+    // Sell shop
+    String soldFormat = "&7Sold %amount%x %shopItemId% for $%total%.";
 
 
     @Override

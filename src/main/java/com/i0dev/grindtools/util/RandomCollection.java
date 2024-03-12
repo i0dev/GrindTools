@@ -59,5 +59,16 @@ public class RandomCollection<E> {
         return rc;
     }
 
+    public static RandomCollection<AdvancedItemConfig> buildFromAdvancedItemConfig(List<AdvancedItemConfig> pool) {
+        RandomCollection<AdvancedItemConfig> rc = new RandomCollection<>();
+
+        pool.forEach(extractShopItem -> {
+            int weight = extractShopItem.getWeight();
+            rc.add(weight, extractShopItem);
+        });
+
+        return rc;
+    }
+
 
 }

@@ -65,6 +65,7 @@ public class TechChipConfigEntry {
         newLore.replaceAll(s -> s
                 .replace("%price%", String.valueOf(price))
                 .replace("%nextlevel%", String.valueOf(level + 1))
+                .replace("%maxlevel%", String.valueOf(maxLevel))
                 .replace("%level%", String.valueOf(level)));
         return itemLore(newLore);
     }

@@ -1,18 +1,26 @@
 package com.i0dev.grindtools.engine;
 
+import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import com.i0dev.grindtools.entity.MConf;
 import com.i0dev.grindtools.entity.MLang;
+import com.i0dev.grindtools.entity.object.WorldBreakingConfig;
 import com.i0dev.grindtools.util.GrindToolBuilder;
 import com.i0dev.grindtools.util.ItemBuilder;
 import com.i0dev.grindtools.util.Utils;
 import com.massivecraft.massivecore.Engine;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -39,23 +47,16 @@ public class EngineOther extends Engine {
         e.setResult(null);
     }
 
-
-    @EventHandler
+    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent e) {
         List<ItemStack> soulbounded = new ArrayList<>();
         for (ItemStack drop : e.getDrops()) {
             if (drop.getItemMeta() == null) continue;
-
             boolean soulbound = GrindToolBuilder.isSoulbound(drop);
-            if (soulbound) {
-                soulbounded.add(drop);
-            }
+            if (soulbound) soulbounded.add(drop);
         }
-
-        for (ItemStack soulbound : soulbounded) {
-            e.getDrops().remove(soulbound);
-            e.getEntity().getInventory().addItem(soulbound);
-        }
+        e.getItemsToKeep().addAll(soulbounded);
+        e.getDrops().removeAll(soulbounded);
     }
 
 
@@ -106,5 +107,64 @@ public class EngineOther extends Engine {
         }
     }
 
+    // Prevent grindtools from being destroyed
+    @EventHandler
+    public void onItemDespawn(ItemDespawnEvent e) {
+        ItemStack item = e.getEntity().getItemStack();
+        if (item.getItemMeta() == null) return;
+        if (item.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING) != null) {
+            e.setCancelled(true);
+        }
+    }
 
+    //Prevent grindtools from being damaged
+    public void onEntityDamageEvent(EntityDamageEvent e) {
+        if (!(e.getEntity() instanceof Item)) return;
+        ItemStack item = ((Item) e.getEntity()).getItemStack();
+        if (item.getItemMeta() == null) return;
+        if (item.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING) != null) {
+            e.setCancelled(true);
+        }
+    }
+
+    // World Breaking Config
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onBlockBreak(BlockBreakEvent e) {
+        String world = e.getBlock().getWorld().getName();
+
+        WorldBreakingConfig cnf = MConf.get().getWorldBlockBreakingConfig()
+                .stream()
+                .filter(config -> config.getWorldName().equalsIgnoreCase(world))
+                .findFirst()
+                .orElse(null);
+
+        if (cnf == null) return;
+
+        // Check cane
+        if (cnf.preventBreakingBottomCaneBlock) {
+            // Check if the block is a sugar cane
+            // If it is the bottom block, cancel the event
+            if (e.getBlock().getType().equals(Material.SUGAR_CANE)) {
+                if (!e.getBlock().getRelative(0, -1, 0).getType().equals(Material.SUGAR_CANE)) {
+                    e.setCancelled(true);
+                    e.getPlayer().sendMessage(Utils.color("&cYou can't break the bottom block of a sugar cane in this world."));
+                    return;
+                }
+            }
+        }
+
+        // Check mining modes
+        if (cnf.isAllowedMiningMode()) {
+            if (!cnf.getBlockList().contains(e.getBlock().getType())) {
+                e.setCancelled(true);
+                return;
+            }
+        } else {
+            if (cnf.getBlockList().contains(e.getBlock().getType())) {
+                e.setCancelled(true);
+                return;
+            }
+        }
+    }
 }

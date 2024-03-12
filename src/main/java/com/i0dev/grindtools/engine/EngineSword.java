@@ -39,6 +39,7 @@ public class EngineSword extends Engine {
 
         if (!SwordConfig.get().getMobWhitelist().contains(e.getEntityType())) {
             Utils.msg(player, MLang.get().grindSwordNoEffect);
+            return;
         }
 
         double damageMultiplier = GrindToolBuilder.getDamageModifier(tool);

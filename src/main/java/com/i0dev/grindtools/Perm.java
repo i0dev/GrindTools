@@ -10,6 +10,8 @@ public enum Perm implements Identified {
 
     DEBUG("debug"),
 
+    SHOP("shop"),
+
     EXTRACT("extract"),
     EXTRACT_SHOP("extract.shop"),
     EXTRACT_REFRESHSHOP("extract.refreshshop"),

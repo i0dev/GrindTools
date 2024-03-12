@@ -10,6 +10,7 @@ api-version: 1.20
 permissions:
   grindtools.basecommand: { description: grindtools basecommand, default: false }
   grindtools.debug: { description: debug, default: false }
+  grindtools.shop: { description: shop, default: false }
   grindtools.extract: { description: extract, default: false }
   grindtools.extract.shop: { description: extract shop, default: false }
   grindtools.extract.refreshshop: { description: extract refreshshop, default: false }
@@ -57,6 +58,7 @@ permissions:
     grindtools.fishingregion.teleport: true
   grindtools.*:
     grindtools.basecommand: true
+    grindtools.shop: true
     grindtools.debug: true
     grindtools.extract: true
     grindtools.extract.shop: true

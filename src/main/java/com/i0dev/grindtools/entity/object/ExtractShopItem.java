@@ -39,11 +39,15 @@ public class ExtractShopItem {
 
         for (String line : lore) {
             if (line.contains("%balances%")) {
-                cost.forEach((id, amount) -> newLore.add(
-                        ExtractShopConf.get().getBalanceLoreFormat()
-                                .replace("%id%", id)
-                                .replace("%amount%", String.valueOf(amount))
-                ));
+                cost.forEach((id, amount) -> {
+                    // Capitalize the first letter of the id
+                    id = id.substring(0, 1).toUpperCase() + id.substring(1);
+                    newLore.add(
+                            ExtractShopConf.get().getBalanceLoreFormat()
+                                    .replace("%id%", id)
+                                    .replace("%amount%", String.valueOf(amount))
+                    );
+                });
             } else if (line.contains("%limit%")) {
                 newLore.add(line.replace("%limit%", String.valueOf(limit - ExtractShopData.get().getPurchases(observer, id))));
             } else {

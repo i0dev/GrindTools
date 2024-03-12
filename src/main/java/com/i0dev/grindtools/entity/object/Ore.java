@@ -25,5 +25,4 @@ public class Ore {
 
     boolean requireGrindtoolPickaxeToMine;
     boolean requireFullAgeToMine;
-
 }
