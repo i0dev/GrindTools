@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -141,6 +142,8 @@ public class EngineOther extends Engine {
 
         if (cnf == null) return;
 
+        if (e.getPlayer().hasPermission(cnf.permissionBypass)) return;
+
         // Check cane
         if (cnf.preventBreakingBottomCaneBlock) {
             // Check if the block is a sugar cane
@@ -158,13 +161,35 @@ public class EngineOther extends Engine {
         if (cnf.isAllowedMiningMode()) {
             if (!cnf.getBlockList().contains(e.getBlock().getType())) {
                 e.setCancelled(true);
-                return;
+                Utils.msg(e.getPlayer(), MLang.get().cannotMineBlock);
             }
         } else {
             if (cnf.getBlockList().contains(e.getBlock().getType())) {
                 e.setCancelled(true);
-                return;
+                Utils.msg(e.getPlayer(), MLang.get().cannotMineBlock);
             }
         }
     }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onBlockPlace(BlockPlaceEvent e) {
+        String world = e.getBlock().getWorld().getName();
+
+        WorldBreakingConfig cnf = MConf.get().getWorldBlockBreakingConfig()
+                .stream()
+                .filter(config -> config.getWorldName().equalsIgnoreCase(world))
+                .findFirst()
+                .orElse(null);
+
+        if (cnf == null) return;
+
+        if (e.getPlayer().hasPermission(cnf.permissionBypass)) return;
+
+        if (cnf.preventPlacingAllBlocks) {
+            e.setCancelled(true);
+            Utils.msg(e.getPlayer(), MLang.get().cannotPlaceBlock);
+        }
+    }
+
 }

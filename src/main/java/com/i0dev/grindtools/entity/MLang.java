@@ -96,6 +96,9 @@ public class MLang extends Entity<MLang> {
     // Sell shop
     String soldFormat = "&7Sold %amount%x %shopItemId% for $%total%.";
 
+    // mining prevention
+    String cannotMineBlock = "%prefix% &cYou cannot mine this block.";
+    String cannotPlaceBlock = "%prefix% &cYou cannot place this block.";
 
     @Override
     public MLang load(MLang that) {

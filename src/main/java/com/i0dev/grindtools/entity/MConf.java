@@ -54,12 +54,13 @@ public class MConf extends Entity<MConf> {
 
     // Prevent breaking blocks in worlds config
     List<WorldBreakingConfig> worldBlockBreakingConfig = MUtil.list(
-            new WorldBreakingConfig() {{
-                setWorldName("Gardens");
-                setAllowedMiningMode(true);
-                setBlockList(MUtil.list(Material.PRISMARINE, Material.EMERALD_ORE, Material.SUGAR_CANE));
-                setPreventBreakingBottomCaneBlock(true);
-            }}
+            new WorldBreakingConfig("Gardens",
+                    true,
+                    MUtil.list(Material.PRISMARINE, Material.EMERALD_ORE, Material.SUGAR_CANE),
+                    true,
+                    "grindtools.bypass.gardens",
+                    true
+            )
     );
 
     @Override

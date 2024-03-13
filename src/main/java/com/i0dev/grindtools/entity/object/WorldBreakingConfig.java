@@ -1,11 +1,13 @@
 package com.i0dev.grindtools.entity.object;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bukkit.Material;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class WorldBreakingConfig {
 
     public String worldName;
@@ -16,4 +18,6 @@ public class WorldBreakingConfig {
 
     public List<Material> blockList;
     public boolean preventBreakingBottomCaneBlock;
+    public String permissionBypass;
+    public boolean preventPlacingAllBlocks;
 }
