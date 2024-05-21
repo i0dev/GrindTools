@@ -44,6 +44,7 @@ public class CmdGrindToolsGiveUpgradeNext extends GrindToolsCommand {
         Utils.msg(sender, MLang.get().gaveUpgrade,
                 new Pair<>("%upgrade%", upgrade.getId()),
                 new Pair<>("%amount%", String.valueOf(amount)),
+                new Pair<>("%displayName%", upgrade.getDisplayName()),
                 new Pair<>("%player%", player.getName())
         );
     }

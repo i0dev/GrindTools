@@ -55,6 +55,7 @@ public class CmdGrindToolsGiveTechChip extends GrindToolsCommand {
                 new Pair<>("%techChip%", chip.name()),
                 new Pair<>("%level%", String.valueOf(level)),
                 new Pair<>("%amount%", String.valueOf(amount)),
+                new Pair<>("%displayName%", chip.getDisplayName()),
                 new Pair<>("%player%", player.getName())
         );
 

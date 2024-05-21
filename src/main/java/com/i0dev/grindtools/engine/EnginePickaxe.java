@@ -19,8 +19,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -38,33 +39,92 @@ public class EnginePickaxe extends Engine {
     }
 
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onHotbarSwitchItem(PlayerItemHeldEvent e) {
-        Player player = e.getPlayer();
-        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
-            player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
-        }
-        ItemStack tool = player.getInventory().getItem(e.getNewSlot());
-        if (tool == null) return;
-        if (tool.getType().equals(Material.AIR)) return;
-        if (tool.getItemMeta() == null) return;
-        String toolTypeString = tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING);
-        if (toolTypeString == null) return;
-        if (toolTypeString.equalsIgnoreCase("PICKAXE")) {
-            int miningFatigueLevel = PickaxeConfig.get().getMiningFatigueMap().getOrDefault(tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tier"), PersistentDataType.STRING), -1);
-            if (miningFatigueLevel != -1) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 1000000000, miningFatigueLevel));
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerDropItem(PlayerDropItemEvent e) {
-        Player player = e.getPlayer();
-        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
-            player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
-        }
-    }
+//    @EventHandler(priority = EventPriority.MONITOR)
+//    public void onHotbarSwitchItem(PlayerItemHeldEvent e) {
+//        Player player = e.getPlayer();
+//        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
+//            player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+//        }
+//        ItemStack tool = player.getInventory().getItem(e.getNewSlot());
+//        if (tool == null) return;
+//        if (tool.getType().equals(Material.AIR)) return;
+//        if (tool.getItemMeta() == null) return;
+//        String toolTypeString = tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING);
+//        if (toolTypeString == null) return;
+//        if (toolTypeString.equalsIgnoreCase("PICKAXE")) {
+//            int miningFatigueLevel = PickaxeConfig.get().getMiningFatigueMap().getOrDefault(tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tier"), PersistentDataType.STRING), -1);
+//            if (miningFatigueLevel != -1) {
+//                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 1000000000, miningFatigueLevel));
+//            }
+//        }
+//    }
+//
+//    @EventHandler(priority = EventPriority.MONITOR)
+//    public void onPlayerDropItem(PlayerDropItemEvent e) {
+//        Player player = e.getPlayer();
+//        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
+//            player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+//        }
+//    }
+//
+//    @EventHandler(priority = EventPriority.MONITOR)
+//    public void onPlayerPickUpItem(EntityPickupItemEvent e) {
+//        if (e.getEntityType() != EntityType.PLAYER) return;
+//        Player player = (Player) e.getEntity();
+//        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
+//            player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+//        }
+//        ItemStack tool = e.getItem().getItemStack();
+//        if (tool.getItemMeta() == null) return;
+//        String toolTypeString = tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING);
+//        if (toolTypeString == null) return;
+//        if (toolTypeString.equalsIgnoreCase("PICKAXE")) {
+//            int miningFatigueLevel = PickaxeConfig.get().getMiningFatigueMap().getOrDefault(tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tier"), PersistentDataType.STRING), -1);
+//            if (miningFatigueLevel != -1) {
+//                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 1000000000, miningFatigueLevel));
+//            }
+//        }
+//    }
+//
+//    @EventHandler(priority = EventPriority.MONITOR)
+//    public void onHotKeyItem(PlayerSwapHandItemsEvent e) {
+//        Player player = (Player) e.getPlayer();
+//        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
+//            player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+//        }
+//        ItemStack tool = e.getMainHandItem();
+//        if (tool == null) return;
+//        if (tool.getType().equals(Material.AIR)) return;
+//        if (tool.getItemMeta() == null) return;
+//        String toolTypeString = tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING);
+//        if (toolTypeString == null) return;
+//        if (toolTypeString.equalsIgnoreCase("PICKAXE")) {
+//            int miningFatigueLevel = PickaxeConfig.get().getMiningFatigueMap().getOrDefault(tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tier"), PersistentDataType.STRING), -1);
+//            if (miningFatigueLevel != -1) {
+//                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 1000000000, miningFatigueLevel));
+//            }
+//        }
+//    }
+//
+//    @EventHandler(priority = EventPriority.MONITOR)
+//    public void onInventoryClick(InventoryClickEvent e) {
+//        Player player = (Player) e.getWhoClicked();
+//        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
+//            player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+//        }
+//        ItemStack tool = e.getWhoClicked().getInventory().getItemInMainHand();
+//        if (tool == null) return;
+//        if (tool.getType().equals(Material.AIR)) return;
+//        if (tool.getItemMeta() == null) return;
+//        String toolTypeString = tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tool-type"), PersistentDataType.STRING);
+//        if (toolTypeString == null) return;
+//        if (toolTypeString.equalsIgnoreCase("PICKAXE")) {
+//            int miningFatigueLevel = PickaxeConfig.get().getMiningFatigueMap().getOrDefault(tool.getItemMeta().getPersistentDataContainer().get(GrindToolBuilder.getKey("tier"), PersistentDataType.STRING), -1);
+//            if (miningFatigueLevel != -1) {
+//                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 1000000000, miningFatigueLevel));
+//            }
+//        }
+//    }
 
 
     @EventHandler

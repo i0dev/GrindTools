@@ -290,10 +290,15 @@ public class EngineSell extends Engine {
 
             int total = price * amount;
 
+            String displayName = item.getI18NDisplayName();
+            if (item.getItemMeta().hasDisplayName())
+                displayName = item.getItemMeta().getDisplayName();
+
             GrindToolBuilder.givePlayerMoney((Player) clicker, total);
             Utils.msg(clicker, MLang.get().soldFormat
                     .replace("%amount%", String.valueOf(amount))
                     .replace("%shopItemId%", shopItemId)
+                    .replace("%itemDisplayName", displayName)
                     .replace("%total%", String.valueOf(total))
             );
             inventory.setItem(i, null);

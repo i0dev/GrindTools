@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @EditorName("config")
@@ -63,6 +64,13 @@ public class MConf extends Entity<MConf> {
             )
     );
 
+    Map<String, Integer> miningFatigueWorldMap = MUtil.map(
+            "Gardens", 1,
+            "AncientRuins", 1,
+            "PreRuins", 1
+    );
+
+    // Item Config
     @Override
     public MConf load(MConf that) {
         super.load(that);

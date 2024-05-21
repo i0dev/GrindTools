@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="08163441-4011-4cd2-8577-0c60d19eb969" name="Changes" comment="changed... yup">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/i0dev/grindtools/engine/EngineSell.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/i0dev/grindtools/entity/SellShop.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/i0dev/grindtools/entity/SellShopColl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/i0dev/grindtools/GrindToolsPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/i0dev/grindtools/GrindToolsPlugin.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2R8P5NsCD19Tm1bK1tBukFaw6mD" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="sortByType" value="true" />
+    <option name="sortKey" value="BY_TYPE" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "/Users/andrewm868/Library/CloudStorage/OneDrive-Personal/Development/Minecraft/MCRivals/GrindTools",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "settings.sync",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Andre\OneDrive\Development\Minecraft\MCRivals\GrindTools\src\main\java\com\i0dev\grindtools\entity" />
+      <recent name="C:\Users\Andre\OneDrive\Development\Minecraft\MCRivals\GrindTools\src\main\java\com\i0dev\grindtools" />
+      <recent name="C:\Users\Andre\OneDrive\Development\Minecraft\MCRivals\GrindTools\src\main\resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.i0dev.grindtools.entity" />
+      <recent name="com.i0dev.grindtools.entity.object" />
+      <recent name="com.i0dev.grindtools.task" />
+      <recent name="com.i0dev.grindtools" />
+      <recent name="com.i0dev.grindtools.action" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Maven.GrindTools [deploy]">
+    <configuration name="GrindTools [clean,package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+                <option value="package" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="GrindTools [deploy]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="deploy" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Maven.GrindTools [clean,package]" />
+      <item itemvalue="Maven.GrindTools [deploy]" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="08163441-4011-4cd2-8577-0c60d19eb969" name="Changes" comment="" />
+      <created>1686628551669</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1686628551669</updated>
+      <workItem from="1686628553147" duration="7267000" />
+      <workItem from="1686691270407" duration="11343000" />
+      <workItem from="1686751630575" duration="5317000" />
+      <workItem from="1686766442159" duration="7559000" />
+      <workItem from="1686776747113" duration="13299000" />
+      <workItem from="1686844949776" duration="2390000" />
+      <workItem from="1686884907332" duration="8438000" />
+      <workItem from="1686970842847" duration="9023000" />
+      <workItem from="1687020968429" duration="15051000" />
+      <workItem from="1687133333201" duration="44000" />
+      <workItem from="1687145228520" duration="1791000" />
+      <workItem from="1687318961553" duration="25000" />
+      <workItem from="1687965800855" duration="5055000" />
+      <workItem from="1688003770468" duration="11000" />
+      <workItem from="1689131743640" duration="15000" />
+      <workItem from="1689564442268" duration="3446000" />
+      <workItem from="1689606647010" duration="372000" />
+      <workItem from="1689607380612" duration="3000" />
+      <workItem from="1689983438889" duration="274000" />
+      <workItem from="1690044369035" duration="6620000" />
+      <workItem from="1690064832088" duration="976000" />
+      <workItem from="1690151246640" duration="2137000" />
+      <workItem from="1690214729436" duration="4039000" />
+      <workItem from="1690250523894" duration="13000" />
+      <workItem from="1690251124007" duration="2978000" />
+      <workItem from="1690322494043" duration="13459000" />
+      <workItem from="1690573393865" duration="5360000" />
+      <workItem from="1690586187280" duration="203000" />
+      <workItem from="1690647692931" duration="2010000" />
+      <workItem from="1690741916790" duration="64000" />
+      <workItem from="1690947356732" duration="4584000" />
+      <workItem from="1690992121078" duration="35000" />
+      <workItem from="1690995106736" duration="21000" />
+      <workItem from="1691024577244" duration="26000" />
+      <workItem from="1691029755962" duration="3768000" />
+      <workItem from="1691433637950" duration="12216000" />
+      <workItem from="1691463233775" duration="39000" />
+      <workItem from="1691463303741" duration="3788000" />
+      <workItem from="1691524849822" duration="23000" />
+      <workItem from="1691524885392" duration="4134000" />
+      <workItem from="1691538724470" duration="463000" />
+      <workItem from="1691541384992" duration="2208000" />
+      <workItem from="1691618790323" duration="666000" />
+      <workItem from="1691711867311" duration="13000" />
+      <workItem from="1691876245713" duration="30000" />
+      <workItem from="1691955694385" duration="707000" />
+      <workItem from="1692028929708" duration="375000" />
+      <workItem from="1692031238159" duration="143000" />
+      <workItem from="1692045617014" duration="212000" />
+      <workItem from="1692045847843" duration="1329000" />
+      <workItem from="1693013852376" duration="404000" />
+      <workItem from="1693182714837" duration="20000" />
+      <workItem from="1700357288760" duration="193000" />
+      <workItem from="1700357853359" duration="2672000" />
+      <workItem from="1701719106883" duration="1842000" />
+    </task>
+    <task id="LOCAL-00001" summary="initial">
+      <created>1687146936014</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1687146936014</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Refactor and cleanup">
+      <option name="closed" value="true" />
+      <created>1689983638328</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1689983638328</updated>
+    </task>
+    <task id="LOCAL-00003" summary="1.20!">
+      <option name="closed" value="true" />
+      <created>1689983693269</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1689983693269</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Messages&#10;&#10;Cleanup&#10;&#10;bug fix">
+      <option name="closed" value="true" />
+      <created>1690992143279</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1690992143279</updated>
+    </task>
+    <task id="LOCAL-00005" summary="lotz uf updatesz">
+      <option name="closed" value="true" />
+      <created>1691876266226</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1691876266226</updated>
+    </task>
+    <task id="LOCAL-00006" summary="prevent grindtools in crafting table&#10;&#10;&#10;rename lore to putLore in itembuilder">
+      <option name="closed" value="true" />
+      <created>1691956392020</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1691956392020</updated>
+    </task>
+    <task id="LOCAL-00007" summary="changed... yup">
+      <option name="closed" value="true" />
+      <created>1701719455939</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1701719455939</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial" />
+    <MESSAGE value="Refactor and cleanup" />
+    <MESSAGE value="1.20!" />
+    <MESSAGE value="Messages&#10;&#10;Cleanup&#10;&#10;bug fix" />
+    <MESSAGE value="lotz uf updatesz" />
+    <MESSAGE value="prevent grindtools in crafting table&#10;&#10;&#10;rename lore to putLore in itembuilder" />
+    <MESSAGE value="changed... yup" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed... yup" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

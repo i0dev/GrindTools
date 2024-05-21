@@ -43,6 +43,7 @@ public class CmdGrindToolsGiveTool extends GrindToolsCommand {
         Utils.msg(sender, MLang.get().gaveTool,
                 new Pair<>("%tier%", tier.getId()),
                 new Pair<>("%tool%", tool.name()),
+                new Pair<>("%displayName%", tier.getDisplayName()),
                 new Pair<>("%player%", player.getName())
         );
     }

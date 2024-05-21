@@ -1,6 +1,5 @@
 package com.i0dev.grindtools.engine;
 
-import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import com.i0dev.grindtools.entity.MConf;
 import com.i0dev.grindtools.entity.MLang;
 import com.i0dev.grindtools.entity.object.WorldBreakingConfig;
@@ -18,12 +17,13 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -33,6 +33,23 @@ public class EngineOther extends Engine {
 
     public static EngineOther get() {
         return i;
+    }
+
+
+    @EventHandler
+    public void onTeleport(PlayerChangedWorldEvent e) {
+        Player player = e.getPlayer();
+
+        for (Map.Entry<String, Integer> entry : MConf.get().getMiningFatigueWorldMap().entrySet()) {
+            String world = entry.getKey();
+            int level = entry.getValue();
+
+            if (e.getPlayer().getWorld().getName().equalsIgnoreCase(world)) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 1000000000, level));
+                return;
+            }
+        }
+        player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
     }
 
 
@@ -48,16 +65,16 @@ public class EngineOther extends Engine {
         e.setResult(null);
     }
 
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent e) {
-        List<ItemStack> soulbounded = new ArrayList<>();
-        for (ItemStack drop : e.getDrops()) {
-            if (drop.getItemMeta() == null) continue;
-            boolean soulbound = GrindToolBuilder.isSoulbound(drop);
-            if (soulbound) soulbounded.add(drop);
+        for (Iterator<ItemStack> iterator = e.getDrops().iterator(); iterator.hasNext(); ) {
+            ItemStack drop = iterator.next();
+            if (GrindToolBuilder.isSoulbound(drop)) {
+                iterator.remove();
+                e.getItemsToKeep().add(drop);
+            }
         }
-        e.getItemsToKeep().addAll(soulbounded);
-        e.getDrops().removeAll(soulbounded);
     }
 
 
